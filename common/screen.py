@@ -13,15 +13,15 @@ def getCurrentScreen():
     返回值：
         QScreen or None: 光标所在的屏幕对象，若未找到则返回None
     """
-    cursorPos = QCursor.pos()  # 获取当前鼠标光标的全局坐标位置
+    cursorPos = QCursor.pos() 
     
-    # 遍历系统中所有可用屏幕
+   
     for s in QApplication.screens():
-        # 判断光标位置是否包含在当前屏幕的几何区域内
+    
         if s.geometry().contains(cursorPos):
-            return s  # 返回光标所在的屏幕对象
+            return s 
 
-    return None  # 若未找到光标所在屏幕，返回None
+    return None 
 
 def getCurrentScreenGeometry(avaliable=True):
     """
@@ -38,14 +38,9 @@ def getCurrentScreenGeometry(avaliable=True):
     返回值：
         QRect: 屏幕的几何区域对象，包含x,y坐标及宽度、高度信息
     """
-    # 获取当前屏幕，若获取失败则使用系统主屏幕
     screen = getCurrentScreen() or QApplication.primaryScreen()
 
-    # 极端情况：屏幕对象仍为空时，返回默认分辨率(1920x1080)
     if not screen:
         return QRect(0, 0, 1920, 1080)
 
-    # 根据参数选择返回可用区域或完整区域
-    # 若选择返回可用区域，调用screen.availableGeometry()获取排除系统保留区域的几何区域
-    # 否则调用screen.geometry()获取完整屏幕几何区域
     return screen.availableGeometry() if avaliable else screen.geometry()

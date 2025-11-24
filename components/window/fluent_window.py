@@ -2,70 +2,51 @@
 from typing import Union
 import sys 
 
-from PyQt5.QtCore import Qt, QSize, QRect
-from PyQt5.QtGui import QIcon, QPainter, QColor
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QApplication
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon, QPainter
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel
 
 
 from common.config import qconfig 
+from common.router import qrouter
+from common.color import ThemeBackgroundColor
 from common.icon import FluentIconBase 
-from common.router import qrouter  # 路由管理器（用于界面切换记录）
-from common.style_sheet import FluentStyleSheet, isDarkTheme
-from common.animation import BackgroundAnimation  # 背景动画控件基类
+from common.style_sheet import FluentStyleSheet
+from common.animation import BackgroundAnimation 
 
-from qframelesswindow import FramelessWindow,TitleBar, TitleBarBase  # 无边框窗口基类
-
+from qframelesswindow import FramelessWindow,TitleBar, TitleBarBase
 from components.navigation import (NavigationInterface, NavigationItemPosition,
-                                     NavigationTreeWidget)  # 导航相关组件
-
+                                     NavigationTreeWidget) 
 from components.window.stacked_widget import StackedWidget 
 
 class FluentWindowBase(BackgroundAnimation, FramelessWindow):
     """ 自定义Fluent风格窗口基类 """
 
     def __init__(self, parent=None):
-        self._lightBackgroundColor = QColor(249, 244, 240)  # fluent 浅色主题默认背景色（浅灰蓝）
-        self._darkBackgroundColor = QColor(32, 32, 32)  # 深色主题默认背景色（深灰黑）
-        super().__init__(parent=parent)  # 调用父类（FramelessWindow）初始化，设置父窗口为parent
-
-        self.hBoxLayout = QHBoxLayout(self)  # 主水平布局（管理窗口内所有控件排列）
-        self.stackedWidget = StackedWidget(self)  # 堆叠窗口控件（用于切换不同子界面）
-        self.navigationInterface = None  # 导航界面（子类需具体实现，如侧边栏导航或顶部导航栏）
+        super().__init__(parent=parent)
         
-        # 初始化布局属性
-        self.hBoxLayout.setSpacing(0)  # 布局内控件间距设为0
-        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)  # 布局外边框边距设为0（控件贴边显示）
+        self.stackedWidget = StackedWidget(self) 
+        
+        self._init_ui()
 
-        FluentStyleSheet.FLUENT_WINDOW.apply(self.stackedWidget)  # 为堆叠窗口应用Fluent窗口样式表
+    def _init_ui(self):
+        """ 初始化UI组件 """
 
-    def switchTo(self, interface: QWidget):
+        self.hBoxLayout = QHBoxLayout(self) 
+        self.hBoxLayout.setSpacing(0) 
+        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
+
        
-        self.stackedWidget.setCurrentWidget(interface, popOut=False)     # 切换到指定子界面：设置堆叠窗口当前控件为interface，禁用弹出动画（popOut=False）
+    def switchTo(self, interface: QWidget):
+        self.stackedWidget.setCurrentWidget(interface, popOut=False)
 
     def _onCurrentInterfaceChanged(self, index: int):
         """ 当前子界面索引变化时触发（堆叠窗口切换页面） """
         widget = self.stackedWidget.widget(index)  # 获取索引对应的子界面控件
-        self.navigationInterface.setCurrentItem(widget.objectName())  # 更新导航栏选中项（通过界面objectName匹配）
-        qrouter.push(self.stackedWidget, widget.objectName())  # 将界面路由记录到qrouter
+        qrouter.push(self.stackedWidget, widget.objectName())
 
-        self._updateStackedBackground()  # 更新堆叠窗口背景透明度
-
-    def _updateStackedBackground(self):
-        """ 更新堆叠窗口背景透明度（根据当前界面是否透明） """
-        # 获取当前界面的"isStackedTransparent"属性（标记是否使用透明背景）
-        isTransparent = self.stackedWidget.currentWidget().property("isStackedTransparent")
-        # 如果当前堆叠窗口透明度状态与界面属性一致，则无需更新
-        if bool(self.stackedWidget.property("isTransparent")) == isTransparent:
-            return
-
-        self.stackedWidget.setProperty("isTransparent", isTransparent)  # 更新堆叠窗口透明度属性
-        self.stackedWidget.setStyle(QApplication.style())  # 刷新样式使属性生效
-
-   
     def _normalBackgroundColor(self):
-        """ 获取正常状态下的背景色（根据主题） """
-      
-        return self._darkBackgroundColor if isDarkTheme() else self._lightBackgroundColor
+        return ThemeBackgroundColor.color()
 
 
     def paintEvent(self, e):
@@ -73,19 +54,19 @@ class FluentWindowBase(BackgroundAnimation, FramelessWindow):
         super().paintEvent(e)
         painter = QPainter(self)
         painter.setPen(Qt.NoPen)
-        painter.setBrush(self.backgroundColor)  # 设置画刷为当前背景色
-        painter.drawRect(self.rect())  # 绘制填充整个窗口区域的矩形
+        painter.setBrush(self.backgroundColor)
+        painter.drawRect(self.rect())
 
 
     def setTitleBar(self, titleBar):
         """ 设置自定义标题栏 """
-        super().setTitleBar(titleBar)  # 调用父类方法设置标题栏
+        super().setTitleBar(titleBar)
 
         # 在macOS上隐藏自定义标题栏按钮（使用系统标题栏按钮）
         if sys.platform == "darwin" and self.isSystemButtonVisible() and isinstance(titleBar, TitleBarBase):
-            titleBar.minBtn.hide()  # 隐藏最小化按钮
-            titleBar.maxBtn.hide()  # 隐藏最大化按钮
-            titleBar.closeBtn.hide()  # 隐藏关闭按钮
+            titleBar.minBtn.hide() 
+            titleBar.maxBtn.hide() 
+            titleBar.closeBtn.hide()
 
 class FluentTitleBar(TitleBar):
     """ 自定义Fluent风格标题栏 """
@@ -93,8 +74,6 @@ class FluentTitleBar(TitleBar):
     def __init__(self, parent):
         super().__init__(parent) 
         self.setFixedHeight(48)
-
-        # 移除默认标题栏中的最小化/最大化/关闭按钮（后续重新排列）
         self.hBoxLayout.removeWidget(self.minBtn)
         self.hBoxLayout.removeWidget(self.maxBtn)
         self.hBoxLayout.removeWidget(self.closeBtn)
@@ -129,7 +108,7 @@ class FluentTitleBar(TitleBar):
         self.vBoxLayout.addStretch(1)  # 垂直布局底部添加伸缩项（按钮靠上显示）
         self.hBoxLayout.addLayout(self.vBoxLayout, 0)  # 将垂直布局添加到标题栏主布局
 
-        FluentStyleSheet.FLUENT_WINDOW.apply(self)  # 为标题栏应用Fluent窗口样式表
+        #FluentStyleSheet.FLUENT_WINDOW.apply(self)  # 为标题栏应用Fluent窗口样式表
 
     def setTitle(self, title):
         """ 更新标题标签文本并调整大小 """
@@ -161,6 +140,9 @@ class FluentWindow(FluentWindowBase):
         # 导航界面显示模式变化时，将标题栏置于顶层（避免被遮挡）
         self.navigationInterface.displayModeChanged.connect(self.titleBar.raise_)
         self.titleBar.raise_()  # 确保标题栏初始在顶层
+
+        FluentStyleSheet.FLUENT_WINDOW.apply(self)  # 为堆叠窗口应用Fluent窗口样式表
+
 
     def addSubInterface(self, interface: QWidget, icon: Union[FluentIconBase, QIcon, str], text: str,
                         position=NavigationItemPosition.TOP, parent=None, isTransparent=False) -> NavigationTreeWidget:
@@ -201,10 +183,9 @@ class FluentWindow(FluentWindowBase):
         if self.stackedWidget.count() == 1:
             # 连接堆叠窗口当前索引变化信号到_onCurrentInterfaceChanged
             self.stackedWidget.currentChanged.connect(self._onCurrentInterfaceChanged)
-            self.navigationInterface.setCurrentItem(routeKey)  # 设置导航项为选中状态
-            qrouter.setDefaultRouteKey(self.stackedWidget, routeKey)  # 设置默认路由键
+            self.navigationInterface.setCurrentItem(routeKey)
+            qrouter.push(self.stackedWidget, routeKey)  # 设置默认路由键
 
-        self._updateStackedBackground()  # 更新堆叠窗口背景透明度
 
         return item  # 返回创建的导航项
 

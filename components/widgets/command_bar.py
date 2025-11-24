@@ -45,7 +45,6 @@ class CommandButton(CustomStandardButton):
         如果按钮仅显示图标，则根据是否为紧凑模式返回不同大小
         """
         if self.isIconOnly():   # 如果按钮仅显示图标
-            # 根据是否为紧凑模式返回不同大小
             return QSize(36, 32) if self.isTight() else QSize(48, 32)
 
         # 获取文本宽度
@@ -61,11 +60,9 @@ class CommandButton(CustomStandardButton):
         return QSize(tw + 32, 50)
 
     def isIconOnly(self):
-        # 如果没有文本，则仅显示图标
         if not self.text():
             return True
 
-        # 检查按钮样式是否为仅显示图标或跟随系统样式
         return self.toolButtonStyle() in [Qt.ToolButtonIconOnly, Qt.ToolButtonFollowStyle]
 
     def _drawIcon(self, icon, painter, rect):
@@ -84,7 +81,7 @@ class CommandButton(CustomStandardButton):
     def setAction(self, action: QAction):
         # 设置按钮关联的动作
         self._action = action
-        # 更新按钮状态以匹配动作
+        
         self._onActionChanged()
 
         self.clicked.connect(action.trigger)    # 连接按钮点击信号到动作的触发槽
@@ -277,11 +274,8 @@ class CommandBar(QFrame):
 
         # 创建按钮并关联动作
         button = self._createButton(action)
-        # 将按钮添加到布局末尾
         self._insertWidgetToLayout(-1, button)
-        # 调用父类方法添加动作
         super().addAction(action)
-        # 返回创建的按钮
         return button
 
     def addActions(self, actions: Iterable[QAction]):
@@ -440,17 +434,11 @@ class CommandBar(QFrame):
         # 创建命令按钮
         button = CommandButton(self)
         
-        # 设置按钮关联的动作
         button.setAction(action)
-        # 设置按钮样式
         button.setToolButtonStyle(self.toolButtonStyle())
-        # 设置按钮是否为紧凑模式
         button.setTight(self.isButtonTight())
-        # 设置图标大小
         button.setIconSize(self.iconSize())
-        # 设置按钮字体
         button.setFont(self.font())
-        # 返回创建的按钮
         return button
 
     def _insertWidgetToLayout(self, index: int, widget: QWidget):

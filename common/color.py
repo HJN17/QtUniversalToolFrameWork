@@ -4,6 +4,16 @@ from PyQt5.QtGui import QColor
 from .style_sheet import themeColor, Theme, isDarkTheme
 from .config import isDarkThemeMode
 
+class ThemeBackgroundColor(Enum):
+
+    LIGHT = QColor(249, 244, 240)
+    DARK = QColor(32, 32, 32)
+
+    @classmethod
+    def color(cls) -> QColor:
+        return cls.DARK.value if isDarkThemeMode() else cls.LIGHT.value
+
+
 
 class FluentSystemColor(Enum):
     """

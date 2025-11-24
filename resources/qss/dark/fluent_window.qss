@@ -2,10 +2,7 @@ FluentTitleBar {
     background-color: transparent;
 }
 
-StackedWidget[isTransparent=true] {
-    background-color: transparent;
-    border: none;
-}
+
 
 FluentTitleBar>QLabel#titleLabel,
 SplitTitleBar>QLabel#titleLabel {
@@ -38,14 +35,16 @@ CloseButton {
     qproperty-normalBackgroundColor: transparent;
 }
 
+
+
+FluentWindowBase {
+    background-color: transparent;
+}
+
 StackedWidget {
     border: 1px solid rgba(0, 0, 0, 0.18);
     border-right: none;
     border-bottom: none;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.0314);
-}
-
-FluentWindowBase {
-    background-color: transparent;
 }

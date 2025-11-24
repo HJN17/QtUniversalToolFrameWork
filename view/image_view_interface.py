@@ -1,10 +1,10 @@
 import os
 
 from PyQt5.QtCore import Qt,pyqtSlot
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout,QFileDialog,QHBoxLayout)
-from PyQt5.QtGui import QPixmap,QColor
+from PyQt5.QtWidgets import QWidget, QVBoxLayout,QFileDialog,QToolButton,QShortcut
+from PyQt5.QtGui import QPixmap,QColor,QKeySequence
 
-from common.style_sheet import StyleSheet
+from common.style_sheet import FluentStyleSheet
 from common.image_utils import get_image_paths,ImageManager
 
 from components.widgets.gallery_interface import TitleToolBar
@@ -12,6 +12,10 @@ from components.widgets.image_canva import ImageCanvas,ImageProgressWidget,Image
 
 from components.widgets import InfoBar, InfoBarPosition, Flyout, FlyoutAnimationType,CommandBarLabel,CommandBar
 from common.icon import FluentIcon as FIF,Action
+
+
+
+
 
 class ImageViewInterface(QWidget):
     """ 图片视图接口类：继承自QWidget，用于显示图片和操作图片 """
@@ -29,6 +33,7 @@ class ImageViewInterface(QWidget):
         self._progressWidget = ImageProgressWidget(self)
         self._image_canvas = ImageCanvas(self)
         self._image_name_label = CommandBarLabel(self)
+
         self._commandBar = self.createCommandBar()
 
         self._current_dir = ""
@@ -44,7 +49,7 @@ class ImageViewInterface(QWidget):
         
     def _init_ui(self):
 
-        StyleSheet.GALLERY_INTERFACE.apply(self)
+        FluentStyleSheet.GALLERY_INTERFACE.apply(self)
         vBoxLayout = QVBoxLayout(self)
         vBoxLayout.setContentsMargins(10, 10, 10, 10)
         vBoxLayout.setSpacing(2)
@@ -76,7 +81,6 @@ class ImageViewInterface(QWidget):
                 Action(FIF.LEFT_ARROW,triggered=self._imageManager.previous,shortcut="Left"),
                 Action(FIF.RIGHT_ARROW,triggered=self._imageManager.next,shortcut="Right"),
             ])
-
             bar.addWidget(self._progressWidget)
 
             bar.addActions([
@@ -138,7 +142,6 @@ class ImageViewInterface(QWidget):
                     parent = self,
                     aniType = FlyoutAnimationType.DROP_DOWN)
         
-
     @pyqtSlot(str)
     def _on_search_signal(self, search_text: str):
         if search_text:

@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QWidget, QLabel, QFileDialog
 
 from common.config import qconfig,VERSION
 from common.icon import FluentIcon as FIF
-from common.style_sheet import StyleSheet,setTheme,updateThemeColor
+from common.style_sheet import FluentStyleSheet,updateStyleSheet
 
 from components.settings import SettingCardGroup, OptionsSettingCard, PushSettingCard,SettingCard,CustomColorSettingCard
 from components.layout import ExpandLayout
@@ -79,7 +79,7 @@ class SettingInterface(ScrollArea):
         # 初始化样式表：应用设置界面专用样式
         self.scrollWidget.setObjectName('scrollWidget')
         self.settingLabel.setObjectName('settingLabel')
-        StyleSheet.SETTING_INTERFACE.apply(self)
+        FluentStyleSheet.SETTING_INTERFACE.apply(self)
 
         self.__initLayout()
         self.__connectSignalToSlot()
@@ -131,6 +131,6 @@ class SettingInterface(ScrollArea):
             self.__onDownloadFolderCardClicked)
 
         # 个性化设置组信号
-        qconfig.themeChanged.connect(setTheme)  # 主题变更信号连接系统主题设置函数
-        qconfig.themeColorChanged.connect(updateThemeColor)
+        qconfig.themeChanged.connect(updateStyleSheet)  # 主题变更信号连接系统主题设置函数
+        qconfig.themeColorChanged.connect(updateStyleSheet)
 

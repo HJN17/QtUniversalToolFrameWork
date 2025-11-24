@@ -13,7 +13,6 @@ from ..widgets.scroll_area import ScrollArea
 from ..widgets.tool_tip import ToolTipFilter
 from ..widgets.scroll_bar import ScrollBarHandleDisplayMode
 from ..widgets.flyout import Flyout, FlyoutAnimationType, FlyoutViewBase, SlideRightFlyoutAnimationManager
-from common.router import qrouter
 from common.style_sheet import FluentStyleSheet, isDarkTheme
 from common.icon import FluentIconBase
 from common.icon import FluentIcon as FIF

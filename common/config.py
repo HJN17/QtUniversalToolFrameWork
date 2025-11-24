@@ -340,7 +340,6 @@ def theme():
     return qconfig.get(qconfig.themeMode)
 
 def isDarkThemeMode(theme=Theme.AUTO):
-    
     return theme == Theme.DARK if theme != Theme.AUTO else isDarkTheme()
 
 

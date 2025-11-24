@@ -71,7 +71,6 @@ class TranslateYAnimation(AnimationBase):
         self.ani.setEasingCurve(QEasingCurve.OutElastic) # 设置缓动曲线为OutElastic（弹性效果）
         self.ani.start()
 
-
 class BackgroundAnimation:
     """ 背景动画部件类 """
     def __init__(self, *args, **kwargs) -> None:
