@@ -10,15 +10,14 @@ class SystemThemeListener(QThread):
         super().__init__(parent=parent)
 
     def run(self):
-        darkdetect.listener(self._onThemeChanged)
+        darkdetect.listener(self._onThemeChanged) # 注册darkdetect主题变化回调函数
 
     def _onThemeChanged(self, theme: str):
         
         theme = Theme.DARK if theme.lower() == "dark" else Theme.LIGHT
 
-        if qconfig.themeMode.value != Theme.AUTO or theme == qconfig.theme:
+        if qconfig.get(qconfig.themeMode) != Theme.AUTO:
             return
 
-        qconfig.theme = Theme.AUTO
-        qconfig._cfg.themeChanged.emit(Theme.AUTO)
+        qconfig.themeChanged.emit(Theme.AUTO)
        

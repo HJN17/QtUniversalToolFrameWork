@@ -15,14 +15,7 @@ from components.widgets.menu import RoundMenu, MenuAnimationType
 
 
 class PushButton(QPushButton):
-    """ 基础按钮类
-
-    构造函数
-    ------------
-    * PushButton(`parent`: QWidget = None) - 创建一个无文本无图标的按钮
-    * PushButton(`text`: str, `parent`: QWidget = None, `icon`: QIcon | str | FluentIconBase = None) - 创建带文本和可选图标的按钮
-    * PushButton(`icon`: QIcon | FluentIcon, `text`: str, `parent`: QWidget = None) - 创建带图标和文本的按钮
-    """
+    """ 基础按钮类"""
 
     @singledispatchmethod  # 用于支持函数重载的装饰器
     def __init__(self, parent: QWidget = None):

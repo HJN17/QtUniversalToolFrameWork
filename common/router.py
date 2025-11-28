@@ -12,6 +12,10 @@ class StackedRouter(QObject):
 
         self.history = {}
 
+    def get(self, routeKey: str) -> QStackedWidget:
+        """ 获取指定路由键对应的堆栈窗口部件 """
+        return self.history.get(routeKey, None)
+
     def push(self, stacked: QStackedWidget, routeKey: str):
         
         self.history[routeKey] = stacked

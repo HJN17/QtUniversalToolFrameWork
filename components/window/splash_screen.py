@@ -6,13 +6,14 @@ from PyQt5.QtCore import Qt, QSize, QEvent
 from PyQt5.QtGui import QPainter, QColor, QIcon
 from PyQt5.QtWidgets import QWidget, QGraphicsDropShadowEffect
 
+from common.color import ThemeBackgroundColor
 from common.icon import FluentIconBase, toQIcon
 from common.style_sheet import isDarkTheme, FluentStyleSheet
 from components.widgets import IconWidget
 from qframelesswindow import TitleBar
 
 class SplashScreen(QWidget):
-    """ Splash screen """
+    """ Splash screen 启动屏 """
 
     def __init__(self, icon: Union[str, QIcon, FluentIconBase], parent=None, enableShadow=True):
         super().__init__(parent=parent)
@@ -21,7 +22,7 @@ class SplashScreen(QWidget):
 
         self.titleBar = TitleBar(self)
         self.iconWidget = IconWidget(icon, self)
-        self.shadowEffect = QGraphicsDropShadowEffect(self)
+        self.shadowEffect = QGraphicsDropShadowEffect(self) # 图标阴影效果
 
         self.iconWidget.setFixedSize(self._iconSize)
         self.shadowEffect.setColor(QColor(0, 0, 0, 50))
@@ -54,14 +55,7 @@ class SplashScreen(QWidget):
     def iconSize(self):
         return self._iconSize
 
-    def setTitleBar(self, titleBar: QWidget):
-        """ set title bar """
-        self.titleBar.deleteLater()
-        self.titleBar = titleBar
-        titleBar.setParent(self)
-        titleBar.raise_()
-        self.titleBar.resize(self.width(), self.titleBar.height())
-
+    
     def eventFilter(self, obj, e: QEvent):
         if obj is self.parent():
             if e.type() == QEvent.Resize:
@@ -77,7 +71,6 @@ class SplashScreen(QWidget):
         self.titleBar.resize(self.width(), self.titleBar.height())
 
     def finish(self):
-        """ close splash screen """
         self.close()
 
     def paintEvent(self, e):
@@ -85,7 +78,6 @@ class SplashScreen(QWidget):
         painter = QPainter(self)
         painter.setPen(Qt.NoPen)
 
-        # draw background
-        c = [32, 32, 32] if isDarkTheme() else [249, 244, 240]
-        painter.setBrush(QColor(*c))
+        c = ThemeBackgroundColor.color()
+        painter.setBrush(c)
         painter.drawRect(self.rect())

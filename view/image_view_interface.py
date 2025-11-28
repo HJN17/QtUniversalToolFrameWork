@@ -13,10 +13,6 @@ from components.widgets.image_canva import ImageCanvas,ImageProgressWidget,Image
 from components.widgets import InfoBar, InfoBarPosition, Flyout, FlyoutAnimationType,CommandBarLabel,CommandBar
 from common.icon import FluentIcon as FIF,Action
 
-
-
-
-
 class ImageViewInterface(QWidget):
     """ 图片视图接口类：继承自QWidget，用于显示图片和操作图片 """
 
@@ -48,8 +44,6 @@ class ImageViewInterface(QWidget):
         self._init_ui()
         
     def _init_ui(self):
-
-        FluentStyleSheet.GALLERY_INTERFACE.apply(self)
         vBoxLayout = QVBoxLayout(self)
         vBoxLayout.setContentsMargins(10, 10, 10, 10)
         vBoxLayout.setSpacing(2)
@@ -193,3 +187,20 @@ class ImageViewInterface(QWidget):
             duration=3000, parent=self
         )
 
+
+
+class ImageViewInterface1(QWidget):
+    """ 图片视图接口类：继承自QWidget，用于显示图片和操作图片 """
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.setObjectName('ImageViewInterface1')
+
+class ImageViewInterface2(QWidget):
+    """ 图片视图接口类：继承自QWidget，用于显示图片和操作图片 """
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.setObjectName('ImageViewInterface2')

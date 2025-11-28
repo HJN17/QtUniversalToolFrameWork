@@ -125,7 +125,6 @@ class FluentStyleSheet(StyleSheetBase, Enum):
     NAVIGATION_INTERFACE = "navigation_interface"   # 导航界面组件样式
 
 
-    GALLERY_INTERFACE = "gallery_interface"
     SAMPLE_CARD = "sample_card"
     HOME_INTERFACE = "home_interface"
     SETTING_INTERFACE = "setting_interface"
@@ -307,6 +306,7 @@ class ThemeColor(Enum):
 
     def color(self):
         """ 获取当前主题色的QColor对象（根据当前主题动态调整HSV值）"""
+
         color = qconfig.get(qconfig.themeColor) 
 
         h, s, v, _ = color.getHsvF()

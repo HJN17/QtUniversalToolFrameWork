@@ -270,7 +270,7 @@ class ColorLineEdit(LineEdit):
 
 class HexColorLineEdit(ColorLineEdit):
     """ 十六进制颜色输入框"""
-
+    
     def __init__(self, color, parent=None):
     
         self.colorFormat = QColor.HexRgb # 颜色格式：HexRgb（6位）

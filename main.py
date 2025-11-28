@@ -12,7 +12,7 @@ if qconfig.get(qconfig.dpiScale) == "Auto":
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
 else:
-    os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "0"  # 禁用QT原生高DPI缩放（通过环境变量控制）
+    os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "0" 
     os.environ["QT_SCALE_FACTOR"] = str(qconfig.get(qconfig.dpiScale))  # 设置QT缩放因子为配置值（将配置中的数值转为字符串）
 QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)  # 设置应用程序使用高DPI位图（确保图标等资源在高分辨率下清晰）
 
