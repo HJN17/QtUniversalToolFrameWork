@@ -2,9 +2,6 @@
 from PyQt5.QtCore import Qt, pyqtSignal, QEasingCurve,QPropertyAnimation,QAbstractAnimation,QPoint
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QAbstractScrollArea,QWidget,QStackedWidget
 
-
-
-
 class PopUpAniInfo:
     """ 弹出动画信息数据类"""
     def __init__(self, widget: QWidget, deltaX: int, deltaY, ani: QPropertyAnimation):

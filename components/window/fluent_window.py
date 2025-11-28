@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel,QStackedWi
 
 
 from common.config import qconfig 
-from common.router import qrouter
+from common.router import router
 from common.color import ThemeBackgroundColor
 from common.icon import FluentIconBase 
 from common.style_sheet import FluentStyleSheet
@@ -100,16 +100,7 @@ class FluentWindow(BackgroundAnimation, FramelessWindow):
     def addSubInterface(self, interface: QWidget, icon: Union[FluentIconBase, QIcon, str], text: str,
                                 position=NavigationItemPosition.TOP) -> NavigationPushButton:
         
-        """
-        添加子界面到窗口（包含导航项）
-        :param interface: 子界面（QWidget）
-        :param icon: 导航项图标（FluentIconBase、QIcon或字符串）
-        :param text: 导航项文本（字符串）
-        :param position: 导航项位置（顶部/滚动区/底部）
-        :param parent: 父导航项（用于嵌套导航）
-        :return: 创建的导航项（NavigationTreeWidget）
-        """
-      
+
         if not interface.objectName():
             raise ValueError("子界面objectName不能为空")
     
@@ -118,6 +109,8 @@ class FluentWindow(BackgroundAnimation, FramelessWindow):
 
         routeKey = interface.objectName() 
 
+        router.set(routeKey, self.stackedWidget)
+        
         item = self.navigationInterface.addItem(
             routeKey=routeKey,
             icon=icon,
@@ -129,8 +122,6 @@ class FluentWindow(BackgroundAnimation, FramelessWindow):
 
         if self.stackedWidget.count() == 1:
             self.navigationInterface.setCurrentItem(routeKey)
-            #qrouter.push(self.stackedWidget, routeKey) 
-
         return item 
 
 

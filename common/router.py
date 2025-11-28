@@ -9,29 +9,28 @@ class StackedRouter(QObject):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-
-        self.history = {}
+        self._stackedWidgets = {}
 
     def get(self, routeKey: str) -> QStackedWidget:
         """ 获取指定路由键对应的堆栈窗口部件 """
-        return self.history.get(routeKey, None)
+        return self._stackedWidgets.get(routeKey, None)
 
-    def push(self, stacked: QStackedWidget, routeKey: str):
+    def set(self, routeKey: str, stacked: QStackedWidget):
         
-        self.history[routeKey] = stacked
+        self._stackedWidgets[routeKey] = stacked
 
     def pop(self):
 
-        if not self.history: 
+        if not self._stackedWidgets: 
             return
 
-        self.history.popitem() 
+        self._stackedWidgets.popitem() 
 
     def remove(self, routeKey: str):
       
-        if routeKey in self.history:
-            del self.history[routeKey]
+        if routeKey in self._stackedWidgets:
+            del self._stackedWidgets[routeKey]
 
        
 
-qrouter = StackedRouter()
+router = StackedRouter()

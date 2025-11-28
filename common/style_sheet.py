@@ -315,39 +315,38 @@ class ThemeColor(Enum):
             # 深色主题：降低饱和度，固定明度为1（最亮）
             s *= 0.84
             v = 1
-            # 根据当前颜色类型进一步调整
             if self == self.DARK_1:
-                v *= 0.9  # 明度降低10%
+                v *= 0.9
             elif self == self.DARK_2:
-                s *= 0.977  # 饱和度降低2.3%
-                v *= 0.82   # 明度降低18%
+                s *= 0.977
+                v *= 0.82 
             elif self == self.DARK_3:
-                s *= 0.95   # 饱和度降低5%
-                v *= 0.7    # 明度降低30%
+                s *= 0.95 
+                v *= 0.7    
             elif self == self.LIGHT_1:
-                s *= 0.92   # 饱和度降低8%
+                s *= 0.92   
             elif self == self.LIGHT_2:
-                s *= 0.78   # 饱和度降低22%
+                s *= 0.78   
             elif self == self.LIGHT_3:
-                s *= 0.65   # 饱和度降低35%
+                s *= 0.65   
         else:
             # 浅色主题：根据颜色类型调整明度和饱和度
             if self == self.DARK_1:
-                v *= 0.75   # 明度降低25%
+                v *= 0.75 
             elif self == self.DARK_2:
-                s *= 1.05   # 饱和度提高5%
-                v *= 0.5    # 明度降低50%
+                s *= 1.05 
+                v *= 0.5 
             elif self == self.DARK_3:
-                s *= 1.1    # 饱和度提高10%
-                v *= 0.4    # 明度降低60%
+                s *= 1.1 
+                v *= 0.4    
             elif self == self.LIGHT_1:
-                v *= 1.05   # 明度提高5%
+                v *= 1.05   
             elif self == self.LIGHT_2:
-                s *= 0.75   # 饱和度降低25%
-                v *= 1.05   # 明度提高5%
+                s *= 0.75   
+                v *= 1.05   
             elif self == self.LIGHT_3:
-                s *= 0.65   # 饱和度降低35%
-                v *= 1.05   # 明度提高5%
+                s *= 0.65   
+                v *= 1.05   
 
         return QColor.fromHsvF(h, min(s, 1), min(v, 1))
 
