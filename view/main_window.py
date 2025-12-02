@@ -9,7 +9,6 @@ from common.theme_listener import SystemThemeListener
 
 from components.window import FluentWindow, SplashScreen
 from components.navigation import NavigationInterface, NavigationItemPosition
-
 from resources import resource
 
 from view.home_interface import HomeInterface
@@ -37,17 +36,19 @@ class MainWindow(FluentWindow):
     def initNavigation(self):
         """ 初始化导航栏，添加导航项和分隔符 """
         
+        self.addScrollItem(self.imageViewInterface,self.imageViewInterface1, FIF.PHOTO,'工具1')
+        self.addScrollItem(self.imageViewInterface,self.imageViewInterface2, FIF.PHOTO,'工具2')
+
+
+
+
         self.addSubInterface(self.homeInterface, FIF.HOME,'首页')
-
+        self.addSubInterface(self.imageViewInterface, FIF.PHOTO,'图像工具')
         self.navigationInterface.addSeparator() 
-    
-        pos = NavigationItemPosition.SCROLL
 
-        self.addSubInterface(self.imageViewInterface, FIF.PHOTO,'图像工具',pos)
-        self.addSubInterface(self.imageViewInterface1, FIF.PHOTO,'图像工具1',pos)
-        self.addSubInterface(self.imageViewInterface2, FIF.PHOTO,'图像工具2',pos)
-        
         self.addSubInterface(self.settingInterface, FIF.SETTING, '设置', NavigationItemPosition.BOTTOM)
+
+    
 
     def initWindow(self):
         self.resize(980, 780)

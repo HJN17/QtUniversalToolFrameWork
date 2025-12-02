@@ -331,7 +331,7 @@ class FluentAnimation(QPropertyAnimation):
         self.start() 
 
     def value(self):
-        return self.targetObject().getValue() 
+        return self.targetObject().getValue() # 获取当前属性值
 
     def setValue(self, value):
         self.targetObject().setValue(value) 
@@ -361,7 +361,7 @@ class FluentAnimation(QPropertyAnimation):
         ani.setPropertyName(propertyType.value.encode()) 
 
         if value is not None:
-            ani.setValue(value) 
+            ani.setValue(value)  # 设置初始值
 
         return ani 
 
@@ -418,6 +418,6 @@ class PointToPointAnimation(FastDismissAnimation):
 @FluentAnimation.register(FluentAnimationType.FADE_IN_OUT) 
 class FadeInOutAnimation(FluentAnimation): 
 
-    def speedToDuration(self, speed: FluentAnimationSpeed):
-        return 83  
+    def speedToDuration(self, speed: FluentAnimationSpeed): # 淡入淡出动画速度到持续时间
+        return 500  
 

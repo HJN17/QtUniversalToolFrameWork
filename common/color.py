@@ -33,11 +33,9 @@ class FluentSystemColor(Enum):
         color = self.value[1] if isDarkThemeMode(theme) else self.value[0]
         return QColor(color)
 
-
 def validColor(color: QColor, default: QColor) -> QColor:
     # 验证颜色有效性并返回安全颜色（无效时返回默认值）
     return color if color.isValid() else default
-
 
 def fallbackThemeColor(color: QColor):
     # 颜色无效时回退到当前主题的默认颜色
@@ -48,3 +46,4 @@ def autoFallbackThemeColor(light: QColor, dark: QColor):
     # 根据当前主题自动选择颜色，无效时回退到主题默认色
     color = dark if isDarkTheme() else light
     return fallbackThemeColor(color)
+

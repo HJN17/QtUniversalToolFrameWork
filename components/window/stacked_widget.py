@@ -24,7 +24,7 @@ class PopUpAniStackedWidget(QStackedWidget):
         self._nextIndex = None # 下一个要显示的部件索引
         self._ani = None # 当前正在运行的动画对象
 
-    def addWidget(self, widget, deltaX=0, deltaY=70):
+    def addWidget(self, widget, deltaX=0, deltaY=30):
         
         super().addWidget(widget)
 
@@ -152,7 +152,7 @@ class StackedWidget(QFrame):
         if isinstance(widget, QAbstractScrollArea):
             widget.verticalScrollBar().setValue(0)
 
-        if not popOut:
+        if not popOut: # 如果不需要弹出当前部件
             self.view.setCurrentWidget(widget, duration=200)
         else:
             self.view.setCurrentWidget(

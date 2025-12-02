@@ -17,7 +17,7 @@ from common.animation import BackgroundAnimation
 from qframelesswindow import FramelessWindow,TitleBar, TitleBarBase
 from components.navigation import NavigationInterface, NavigationItemPosition, NavigationPushButton
 from components.window.stacked_widget import StackedWidget 
-
+from common.menu_icon_manager import mfb
 
 class FluentTitleBar(TitleBar):
     """ 自定义Fluent风格标题栏 """
@@ -97,21 +97,42 @@ class FluentWindow(BackgroundAnimation, FramelessWindow):
         self.widgetLayout.setContentsMargins(0, 48, 8, 8)
 
 
-    def addSubInterface(self, interface: QWidget, icon: Union[FluentIconBase, QIcon, str], text: str,
-                                position=NavigationItemPosition.TOP) -> NavigationPushButton:
+
+    def addScrollItem(self,super_interface: QWidget, interface: QWidget, icon: FluentIconBase, text: str,
+                                onClick=None, tooltip: str = None) -> NavigationPushButton:
+        
+        if not interface.objectName():
+            raise ValueError("子界面objectName不能为空")
+        
+        super_key = super_interface.objectName()
+
+        routeKey = interface.objectName() 
+
+        mfb.set_menu_function_button_item(super_key, routeKey)
+
+        return self.navigationInterface.addItemScroll(
+            routeKey=routeKey,
+            icon=icon,
+            text=text, 
+            onClick=onClick,
+            tooltip=tooltip
+        )
+
+
+    def addSubInterface(self, interface: QWidget, icon: FluentIconBase, text: str,
+                                position=NavigationItemPosition.TOP,) -> NavigationPushButton:
         
 
         if not interface.objectName():
             raise ValueError("子界面objectName不能为空")
     
-
+        routeKey = interface.objectName() 
+        
         self.stackedWidget.addWidget(interface)
 
-        routeKey = interface.objectName() 
-
         router.set(routeKey, self.stackedWidget)
-        
-        item = self.navigationInterface.addItem(
+
+        self.navigationInterface.addItem(
             routeKey=routeKey,
             icon=icon,
             text=text, 
@@ -122,11 +143,12 @@ class FluentWindow(BackgroundAnimation, FramelessWindow):
 
         if self.stackedWidget.count() == 1:
             self.navigationInterface.setCurrentItem(routeKey)
-        return item 
+            self.navigationInterface.setDisabledItems(mfb.get_menu_function_button_items(routeKey))
 
 
     def switchTo(self, interface: QWidget):
         self.stackedWidget.setCurrentWidget(interface)
+        self.navigationInterface.setDisabledItems(mfb.get_menu_function_button_items(interface.objectName()))
 
     def _normalBackgroundColor(self):
         return ThemeBackgroundColor.color()

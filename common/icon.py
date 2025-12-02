@@ -13,23 +13,28 @@ from .config import isDarkTheme, Theme
 from .overload import singledispatchmethod
 
 class FluentIconEngine(QIconEngine):
-    """ 自定义Fluent风格图标引擎"""
+    """ 自定义Fluent风格图标引擎，支持主题自适应和图标主题反转 """
 
-    def __init__(self, icon):
-        
+    def __init__(self, icon, reverse=False):
+       
         super().__init__() 
         self.icon = icon
+        self.isThemeReversed = reverse  # 存储主题反转状态
 
     def paint(self, painter, rect, mode, state):
-        painter.save() # 保存当前绘图状态（避免影响后续绘制）
+        
+        painter.save() 
 
-        if mode == QIcon.Disabled:
+        if mode == QIcon.Disabled: 
             painter.setOpacity(0.5)
         elif mode == QIcon.Selected: 
             painter.setOpacity(0.7)
 
-        theme = Theme.AUTO
-        
+        if not self.isThemeReversed:
+            theme = Theme.AUTO 
+        else:
+            theme = Theme.LIGHT if isDarkTheme() else Theme.DARK
+
         icon = self.icon
         if isinstance(self.icon, Icon):
             icon = self.icon.fluentIcon.icon(theme)
@@ -37,24 +42,24 @@ class FluentIconEngine(QIconEngine):
             icon = self.icon.icon(theme) 
 
         if rect.x() == 19:
-            rect = rect.adjusted(-1, 0, 0, 0) 
+            rect = rect.adjusted(-1, 0, 0, 0)  
 
         icon.paint(painter, rect, Qt.AlignCenter, QIcon.Normal, state)
-        painter.restore()
+        painter.restore()  
 
     def clone(self) -> QIconEngine:
-        return FluentIconEngine(self.icon, self.isThemeReversed) 
+        return FluentIconEngine(self.icon, self.isThemeReversed)  # 返回新的引擎实例
 
     def pixmap(self, size, mode, state):
         
         image = QImage(size, QImage.Format_ARGB32)
-        image.fill(Qt.transparent)
-        pixmap = QPixmap.fromImage(image, Qt.NoFormatConversion)
+        image.fill(Qt.transparent)  
+        pixmap = QPixmap.fromImage(image, Qt.NoFormatConversion)  
 
         painter = QPainter(pixmap)
-        rect = QRect(0, 0, size.width(), size.height())
+        rect = QRect(0, 0, size.width(), size.height()) 
         self.paint(painter, rect, mode, state)
-        return pixmap 
+        return pixmap  
 
 class SvgIconEngine(QIconEngine):
     """ SVG图标引擎（用于渲染SVG格式图标） """
@@ -150,12 +155,14 @@ class FluentIconBase:
 
         color = QColor(color).name() # 转换颜色为十六进制字符串（如"#FF0000"）
         return QIcon(SvgIconEngine(writeSvg(path, fill=color)))
-
-
-    def qicon(self) -> QIcon:
-        return QIcon(FluentIconEngine(self))
+    
+    
+    def qicon(self, reverse=False) -> QIcon:
+       
+        return QIcon(FluentIconEngine(self, reverse))
 
     def render(self, painter, rect, theme=Theme.AUTO, indexes=None, **attributes):
+
         """
         直接渲染图标到指定区域  """
 
@@ -354,7 +361,8 @@ class FluentIcon(FluentIconBase, Enum):
         color = getIconColor(theme)
 
         return f':/resource/images/icons/{self.value}_{color}.svg'
-
+    
+    
 
 class Icon(QIcon):
     """ 图标包装类（将FluentIcon转换为QIcon，并支持主题同步） """

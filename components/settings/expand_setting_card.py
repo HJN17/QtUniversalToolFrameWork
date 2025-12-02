@@ -1,14 +1,9 @@
 # coding:utf-8
-# 导入必要的类型注解模块
 from typing import List, Union
-# 导入PyQt5核心模块：事件、Qt常量、属性动画、属性绑定、缓动曲线、矩形类
 from PyQt5.QtCore import QEvent, Qt, QPropertyAnimation, pyqtProperty, QEasingCurve, QRectF
-# 导入PyQt5绘图模块：颜色、画家、图标、路径
 from PyQt5.QtGui import QColor, QPainter, QIcon, QPainterPath
-# 导入PyQt5窗口部件模块：框架、基础窗口、抽象按钮、应用程序、滚动区域、垂直布局
 from PyQt5.QtWidgets import QFrame, QWidget, QAbstractButton, QApplication, QScrollArea, QVBoxLayout
 
-# 导入项目内部模块：主题判断、图标、样式表、基础设置卡片、垂直布局
 from common.config import isDarkTheme
 from common.icon import FluentIcon as FIF
 from common.style_sheet import FluentStyleSheet
@@ -24,108 +19,76 @@ class ExpandButton(QAbstractButton):
     """
 
     def __init__(self, parent=None):
-        # 调用父类QAbstractButton的构造方法，初始化父部件
         super().__init__(parent)
-        # 设置按钮固定大小为30x30像素
         self.setFixedSize(30, 30)
-        # 初始化旋转角度为0度（未展开状态）
-        self.__angle = 0
-        # 初始化悬停状态标志
+        
+        self.__angle = 0    # 初始化旋转角度为0度（未展开状态）
         self.isHover = False
-        # 初始化按下状态标志
         self.isPressed = False
-        # 创建旋转动画对象，绑定angle属性
-        self.rotateAni = QPropertyAnimation(self, b'angle', self)
-        # 绑定点击信号到内部处理方法
+        self.rotateAni = QPropertyAnimation(self, b'angle', self) # 创建旋转动画对象，绑定angle属性
         self.clicked.connect(self.__onClicked)
 
     def paintEvent(self, e):
-        # 创建画家对象，用于绘制按钮
         painter = QPainter(self)
-        # 设置渲染提示：启用抗锯齿和平滑像素图变换，提升绘制质量
-        painter.setRenderHints(QPainter.Antialiasing |
-                               QPainter.SmoothPixmapTransform)
-        # 设置画笔为无 pen（不绘制边框）
+        painter.setRenderHints(QPainter.Antialiasing |  QPainter.SmoothPixmapTransform)
         painter.setPen(Qt.NoPen)
 
-        # 绘制背景：根据主题模式确定基准颜色（深色主题为白色，浅色为黑色）
         r = 255 if isDarkTheme() else 0
-        # 初始背景色为透明
         color = Qt.transparent
 
-        # 根据按钮状态调整背景色
         if self.isEnabled():
             if self.isPressed:
-                # 按下状态：半透明背景色（透明度10）
                 color = QColor(r, r, r, 10)
             elif self.isHover:
-                # 悬停状态：半透明背景色（透明度14）
                 color = QColor(r, r, r, 14)
         else:
-            # 禁用状态：降低透明度
             painter.setOpacity(0.36)
 
-        # 设置画刷颜色并绘制圆角矩形背景
         painter.setBrush(color)
         painter.drawRoundedRect(self.rect(), 4, 4)
 
-        # 绘制图标：将坐标系原点移至按钮中心（实现围绕中心旋转）
         painter.translate(self.width()//2, self.height()//2)
-        # 根据当前角度旋转坐标系
         painter.rotate(self.__angle)
-        # 渲染向下箭头图标，绘制区域为(-5,-5)到(9.6,9.6)的矩形
         FIF.ARROW_DOWN.render(painter, QRectF(-5, -5, 9.6, 9.6))
 
     def enterEvent(self, e):
-        # 鼠标进入事件：设置悬停状态为True并刷新绘制
         self.setHover(True)
 
     def leaveEvent(self, e):
-        # 鼠标离开事件：设置悬停状态为False并刷新绘制
         self.setHover(False)
 
     def mousePressEvent(self, e):
-        # 鼠标按下事件：调用父类处理逻辑后设置按下状态
         super().mousePressEvent(e)
         self.setPressed(True)
 
     def mouseReleaseEvent(self, e):
-        # 鼠标释放事件：调用父类处理逻辑后取消按下状态
         super().mouseReleaseEvent(e)
         self.setPressed(False)
 
     def setHover(self, isHover: bool):
-        # 设置悬停状态并触发重绘
         self.isHover = isHover
         self.update()
 
     def setPressed(self, isPressed: bool):
-        # 设置按下状态并触发重绘
         self.isPressed = isPressed
         self.update()
 
     def __onClicked(self):
-        # 点击事件处理：根据当前角度判断展开状态并切换
         self.setExpand(self.angle < 180)
 
     def setExpand(self, isExpand: bool):
-        # 设置展开状态并启动旋转动画
         self.rotateAni.stop()  # 停止当前动画（若正在运行）
-        # 设置动画结束角度：展开时180度，折叠时0度
         self.rotateAni.setEndValue(180 if isExpand else 0)
         self.rotateAni.setDuration(200)  # 动画持续时间200毫秒
         self.rotateAni.start()  # 启动动画
 
     def getAngle(self):
-        # 获取当前旋转角度（供pyqtProperty读取）
         return self.__angle
 
     def setAngle(self, angle):
-        # 设置旋转角度并触发重绘（供pyqtProperty写入）
         self.__angle = angle
         self.update()
 
-    # 定义angle属性，绑定getAngle和setAngle方法，支持动画驱动
     angle = pyqtProperty(float, getAngle, setAngle)
 
 
@@ -137,11 +100,9 @@ class SpaceWidget(QWidget):
     """
 
     def __init__(self, parent=None):
-        # 调用父类QWidget构造方法
         super().__init__(parent=parent)
-        # 设置背景透明属性
+        
         self.setAttribute(Qt.WA_TranslucentBackground)
-        # 设置固定高度为1像素
         self.setFixedHeight(1)
 
 

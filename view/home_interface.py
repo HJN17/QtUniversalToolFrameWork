@@ -17,7 +17,6 @@ class HomeInterface(QWidget):
         self.view.setObjectName('view')
         self.setObjectName('homeInterface')
        
-      
         self.vBoxLayout.setContentsMargins(0, 0, 0, 30)
         self.vBoxLayout.setSpacing(30)
         self.vBoxLayout.setAlignment(Qt.AlignTop)

@@ -1,18 +1,18 @@
 # coding:utf-8
 from enum import Enum
-from typing import Union
+from typing import Union,List
 from PyQt5.QtCore import Qt, QPropertyAnimation, QRect, QSize, QEvent, QEasingCurve, pyqtSignal, QPoint
 from PyQt5.QtGui import QIcon, QColor, QPainterPath
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame, QApplication, QHBoxLayout
 
-from .navigation_widget import NavigationToolButton, NavigationWidget, NavigationSeparator,NavigationPushButton
+from .navigation_widget import NavigationToolButton, NavigationWidget, NavigationSeparator,NavigationPushButton,NavigationIconButton
 from ..widgets.scroll_area import ScrollArea
 from ..widgets.tool_tip import ToolTipFilter
 from ..widgets.scroll_bar import ScrollBarHandleDisplayMode
 from common.style_sheet import FluentStyleSheet
 from common.icon import FluentIconBase
 from common.icon import FluentIcon as FIF
-
+from common.animation import FluentAnimation, FluentAnimationType, FluentAnimationProperty
 
 class NavigationDisplayMode(Enum):
     """ 导航栏显示模式枚举 """
@@ -51,6 +51,8 @@ class NavigationPanel(QFrame):
         self._parent = parent
 
         self.items = {} 
+        
+        self._selectedPushKey = None # 当前选中项的键值
 
         self.scrollArea = ScrollArea(self) 
         self.scrollWidget = QWidget() 
@@ -64,6 +66,9 @@ class NavigationPanel(QFrame):
         self.menuButton.installEventFilter(ToolTipFilter(self.menuButton, 500))
         self.menuButton.setToolTip("打开导航")
 
+
+        
+       
 
         self.expandAni = QPropertyAnimation(self, b'geometry', self) 
         self.expandAni.setEasingCurve(QEasingCurve.OutQuad) 
@@ -121,14 +126,17 @@ class NavigationPanel(QFrame):
         return self.items[routeKey]
 
 
-    def insertItem(self, index: int, routeKey: str, icon: Union[str, QIcon, FluentIconBase], text: str, onClick=None,
+    def insertItem(self, index: int, routeKey: str, icon:FluentIconBase, text: str, onClick=None,
                                 position=NavigationItemPosition.TOP, tooltip: str = None) -> NavigationPushButton:
         """ 插入导航树项（创建标准树形导航项并插入到指定位置）"""
 
         if routeKey in self.items.keys():
             return 
+        if position in [NavigationItemPosition.TOP, NavigationItemPosition.BOTTOM]:
 
-        w = NavigationPushButton(icon, text, self)
+            w = NavigationPushButton(icon, text, self)
+        else:
+            w = NavigationIconButton(icon, text, self)
 
         self._registerWidget(routeKey, w, onClick, tooltip)
 
@@ -145,7 +153,10 @@ class NavigationPanel(QFrame):
     def _registerWidget(self, routeKey: str, widget: NavigationWidget, onClick, tooltip: str):
         """ 注册导航部件（内部方法，绑定事件、属性和工具提示）"""
         
-        widget.clicked.connect(lambda: self.setCurrentItem(routeKey))
+        if isinstance(widget, NavigationIconButton):
+            widget.clicked.connect(lambda: self.setCurrentItem(routeKey, isScrollItem=True))
+        else:
+            widget.clicked.connect(lambda: self.setCurrentItem(routeKey))
         
         if onClick is not None:
             widget.clicked.connect(onClick)
@@ -153,7 +164,7 @@ class NavigationPanel(QFrame):
         self.items[routeKey] = widget
 
         if self.displayMode in [NavigationDisplayMode.EXPAND, NavigationDisplayMode.MENU]:
-            widget.setCompacted(False) 
+            widget.setCompacted(False) # 展开模式下，所有导航项部件都不紧凑显示
 
         if tooltip:
             widget.setToolTip(tooltip)
@@ -235,14 +246,35 @@ class NavigationPanel(QFrame):
         else:
             self.collapse() 
 
-    def setCurrentItem(self, routeKey: str):
+
+    def setDisabledItems(self, routeKeys:list[str]):
+        """ 设置指定路由键的导航项为禁用状态（批量操作）"""
+        
+        for k, item in self.items.items():
+            if isinstance(item, NavigationIconButton):
+                item.setHidden(k in routeKeys)
+                    
+
+    #区分滚动区和非滚动区的导航项
+    def setCurrentItem(self, routeKey: str, isScrollItem=False): 
         """ 设置当前选中的导航项（高亮显示）"""
+
+        if self._selectedPushKey == routeKey:
+            return
+    
         if routeKey not in self.items.keys():
             return 
         
         for k, item in self.items.items():
-            item.setSelected(k == routeKey)
-
+            
+            if isScrollItem:
+                if isinstance(item, NavigationIconButton):
+                    item.setSelected(k == routeKey)
+            else:
+                self._selectedPushKey = routeKey
+                item.setSelected(k == routeKey)
+    
+    
 
     def isCollapsed(self):
         return self.displayMode == NavigationDisplayMode.COMPACT

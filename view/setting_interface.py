@@ -20,15 +20,15 @@ class SettingInterface(ScrollArea):
 
         self.settingLabel = QLabel("设置", self)
 
-        self.pathGroup = SettingCardGroup(
-            "路径", self.scrollWidget)
-        self.downloadFolderCard = PushSettingCard(
-            '选择文件夹',
-            FIF.DOWNLOAD,
-            "下载目录", 
-            qconfig.get(qconfig.downloadFolder),
-            self.pathGroup  # 父容器：音乐设置组
-        )
+        # self.pathGroup = SettingCardGroup(
+        #     "路径", self.scrollWidget)
+        # self.downloadFolderCard = PushSettingCard(
+        #     '选择文件夹',
+        #     FIF.DOWNLOAD,
+        #     "下载目录", 
+        #     qconfig.get(qconfig.downloadFolder),
+        #     self.pathGroup  # 父容器：音乐设置组
+        # )
 
         self.personalGroup = SettingCardGroup(
             "个性化", self.scrollWidget)
@@ -89,7 +89,7 @@ class SettingInterface(ScrollArea):
         self.settingLabel.move(36, 30)
 
         # 将卡片添加到对应设置组
-        self.pathGroup.addSettingCard(self.downloadFolderCard)
+        #self.pathGroup.addSettingCard(self.downloadFolderCard)
         self.personalGroup.addSettingCard(self.themeCard)
         self.personalGroup.addSettingCard(self.themeColorCard) 
         self.personalGroup.addSettingCard(self.zoomCard)
@@ -98,7 +98,7 @@ class SettingInterface(ScrollArea):
        
         self.expandLayout.setSpacing(28) 
         self.expandLayout.setContentsMargins(36, 10, 36, 0)
-        self.expandLayout.addWidget(self.pathGroup)
+        #self.expandLayout.addWidget(self.pathGroup)
         self.expandLayout.addWidget(self.personalGroup)
         self.expandLayout.addWidget(self.aboutGroup)
 
@@ -127,8 +127,8 @@ class SettingInterface(ScrollArea):
         """ 连接信号与槽函数：建立UI交互与业务逻辑的关联 """
         qconfig.appRestartSig.connect(self.__showRestartTooltip)  # 配置重启信号连接提示函数
 
-        self.downloadFolderCard.clicked.connect(  
-            self.__onDownloadFolderCardClicked)
+        # self.downloadFolderCard.clicked.connect(  
+        #     self.__onDownloadFolderCardClicked)
 
         # 个性化设置组信号
         qconfig.themeChanged.connect(updateStyleSheet)  # 主题变更信号连接系统主题设置函数

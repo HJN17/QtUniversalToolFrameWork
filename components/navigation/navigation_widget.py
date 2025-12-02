@@ -12,13 +12,12 @@ from collections import deque
 
 # 导入自定义的配置和样式相关模块
 from common.config import isDarkTheme
-from common.style_sheet import themeColor
+from common.style_sheet import themeColor,ThemeColor
 from common.icon import drawIcon, toQIcon
 from common.icon import FluentIcon as FIF
 from common.color import autoFallbackThemeColor
 from common.font import setFont
-from ..widgets.scroll_area import ScrollArea
-from ..widgets.label import AvatarWidget
+from common.animation import FluentAnimation, FluentAnimationType, FluentAnimationProperty,FluentAnimationSpeed
 
 
 class NavigationWidget(QWidget):
@@ -28,15 +27,14 @@ class NavigationWidget(QWidget):
     """
 
     clicked = pyqtSignal(bool) 
-    
-    selectedChanged = pyqtSignal(bool)
 
     EXPAND_WIDTH = 160
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.isCompacted = True 
-        self.isSelected = False
+
+        self.isCompacted = True  # 是否压缩状态
+        self.isSelected = False # 是否选中状态
         self.isPressed = False
         self.isEnter = False 
     
@@ -82,27 +80,33 @@ class NavigationWidget(QWidget):
             self.setFixedSize(self.EXPAND_WIDTH-10, 36) 
 
         self.update()
+    
+    def setHidden(self, isHidden: bool):
+
+        self.setVisible(isHidden) # 隐藏时，不占用空间 isHidden 为 True 时，不占用空间
 
     def setSelected(self, isSelected: bool):
 
         self.isSelected = isSelected 
         self.update()   
-        self.selectedChanged.emit(isSelected) 
 
-    def textColor(self):
+    # 反转文本颜色
+    def textColor(self, bool : bool = False):
+        if bool:
+            return self.lightTextColor if isDarkTheme() else self.darkTextColor
+
         return self.darkTextColor if isDarkTheme() else self.lightTextColor
-
+    
     def setTextColor(self, light, dark):
        
         self.lightTextColor = QColor(light)
         self.darkTextColor = QColor(dark)  
         self.update()
 
-
 class NavigationPushButton(NavigationWidget):
     """ 导航推送按钮 """
 
-    def __init__(self, icon: Union[str, QIcon, FIF], text: str, parent=None):
+    def __init__(self, icon: FIF, text: str, parent=None):
        
         super().__init__(parent=parent)
 
@@ -124,10 +128,10 @@ class NavigationPushButton(NavigationWidget):
     def icon(self):
         return toQIcon(self._icon)
 
-    def setIcon(self, icon: Union[str, QIcon, FIF]): 
+    def setIcon(self, icon: FIF): 
         self._icon = icon  
-        self.update()  
-
+        self.update()
+    
     def _margins(self):
         return QMargins(0, 0, 0, 0)
 
@@ -148,9 +152,12 @@ class NavigationPushButton(NavigationWidget):
         c = 255 if isDarkTheme() else 0 
         m = self._margins()  
         pl, pr = m.left(), m.right() 
-        globalRect = QRect(self.mapToGlobal(QPoint()), self.size()) 
+
+        globalRect = QRect(self.mapToGlobal(QPoint()), self.size())  # 按钮全局矩形区域
 
         if self._canDrawIndicator():
+
+
             painter.setBrush(QColor(c, c, c, 6 if self.isEnter else 10))
             painter.drawRoundedRect(self.rect(), 5, 5)
 
@@ -169,6 +176,70 @@ class NavigationPushButton(NavigationWidget):
         painter.setFont(self.font())  
         painter.setPen(self.textColor()) 
 
+        left = 44 + pl if not self.icon().isNull() else pl + 16
+        painter.drawText(QRectF(left, 0, self.width()-13-left-pr, self.height()), Qt.AlignVCenter, self.text())
+
+class NavigationIconButton(NavigationPushButton):
+    """ 导航图标按钮"""
+
+    def __init__(self, icon: FIF, text: str, parent=None):
+
+        super().__init__(icon, text, parent=parent)
+
+        self._fadeAni = FluentAnimation.create(FluentAnimationType.FADE_IN_OUT, FluentAnimationProperty.OPACITY,speed=FluentAnimationSpeed.SLOW, value=0, parent=self)
+        
+        self._reverseIcon = None
+
+        self.setHidden(True)   
+
+    def setHidden(self, isHidden: bool):
+        super().setHidden(isHidden)
+        
+        if isHidden:
+            self._fadeAni.startAnimation(1,0)
+
+    def setSelected(self, isSelected: bool):
+        if isSelected:
+            self._reverseIcon = self._icon.qicon(True)
+        else:
+            self._reverseIcon = self._icon
+
+        super().setSelected(isSelected)
+        
+
+    def paintEvent(self, e):
+        """ 绘制按钮界面 """
+        painter = QPainter(self) 
+        painter.setRenderHints(QPainter.Antialiasing |  QPainter.TextAntialiasing | QPainter.SmoothPixmapTransform)
+        painter.setPen(Qt.NoPen)
+
+        painter.setOpacity(self._fadeAni.value())
+   
+        c = 255 if isDarkTheme() else 0 
+        m = self._margins()  
+        pl, pr = m.left(), m.right() 
+
+        globalRect = QRect(self.mapToGlobal(QPoint()), self.size())  # 按钮全局矩形区域
+
+        if self._canDrawIndicator():
+            painter.setBrush(themeColor()) 
+            painter.drawRoundedRect(self.rect(), 5, 5) 
+
+        elif self.isEnter and self.isEnabled() and globalRect.contains(QCursor.pos()): # 鼠标悬停在按钮上
+            painter.setBrush(QColor(c, c, c, 10))
+            painter.drawRoundedRect(self.rect(), 5, 5)
+
+        drawIcon(self._reverseIcon, painter, QRectF(11.5+pl, 10, 16, 16))
+
+        if self.isCompacted:
+            return 
+        
+        if self._canDrawIndicator():
+            painter.setPen(self.textColor(True)) 
+        else:
+            painter.setPen(self.textColor()) 
+        
+        painter.setFont(self.font())  
         left = 44 + pl if not self.icon().isNull() else pl + 16
         painter.drawText(QRectF(left, 0, self.width()-13-left-pr, self.height()), Qt.AlignVCenter, self.text())
 

@@ -9,9 +9,10 @@ from PyQt5.QtWidgets import QApplication, QPushButton, QWidget, QHBoxLayout, QSi
 
 # 导入自定义的配置和样式相关模块
 from common.font import setFont
-from common.router import qrouter
+from common.router import router
 from common.style_sheet import themeColor, FluentStyleSheet
 from common.color import autoFallbackThemeColor
+from common.animation import FluentAnimation,FluentAnimationType,FluentAnimationProperty
 from ..widgets.button import PushButton
 
 
@@ -80,8 +81,7 @@ class Pivot(QWidget):
 
         self.hBoxLayout = QHBoxLayout(self)  # 创建水平布局
         # 创建滑动动画，用于指示器移动效果
-        self.slideAni = FluentAnimation.create(
-            FluentAnimationType.POINT_TO_POINT, FluentAnimationProperty.SCALE, value=0, parent=self)
+        self.slideAni = FluentAnimation.create(FluentAnimationType.POINT_TO_POINT, FluentAnimationProperty.SCALE, value=0, parent=self)
 
         FluentStyleSheet.PIVOT.apply(self)  # 应用枢轴样式
 

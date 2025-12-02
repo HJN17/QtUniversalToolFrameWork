@@ -1,5 +1,5 @@
 # coding:utf-8
-from typing import Union
+from typing import Union, List
 
 from PyQt5.QtCore import Qt, QEvent, pyqtSignal
 from PyQt5.QtGui import QResizeEvent, QIcon
@@ -26,11 +26,18 @@ class NavigationInterface(QWidget):
         self.setMinimumWidth(50)  
         self.setAttribute(Qt.WA_TranslucentBackground) 
 
-    def addItem(self, routeKey: str, icon: Union[str, QIcon, FluentIconBase], text: str, onClick=None,
+    def addItem(self, routeKey: str, icon: FluentIconBase, text: str, onClick=None,
                  position=NavigationItemPosition.TOP, tooltip: str = None) -> NavigationPushButton:
         
         return self.panel.insertItem(-1,routeKey, icon, text, onClick,position, tooltip)
 
+    def addItemScroll(self, routeKey: str, icon: FluentIconBase, text: str, onClick=None,
+                 tooltip: str = None) -> NavigationPushButton:
+        return self.panel.insertItem(-1,routeKey, icon, text, onClick,NavigationItemPosition.SCROLL, tooltip)
+
+    def setDisabledItems(self, routeKeys:list[str]):
+        self.panel.setDisabledItems(routeKeys)
+    
     def setCurrentItem(self, routeKey: str):
         self.panel.setCurrentItem(routeKey)
 
