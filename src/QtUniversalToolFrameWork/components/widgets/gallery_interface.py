@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QWidget,QVBoxLayout, QHBoxLayout, QFrame,QLabel,QFil
 from ...common.icon import FluentIcon as FIF,FluentIconBase,drawIcon
 from ...common.config import qconfig, isDarkTheme
 
-from ..widgets import IconWidget,TitleLabel,CaptionLabel
+from ..widgets import IconWidget,TitleLabel
 
 class TitleToolBar(QWidget):
     """ 标题工具条 """
@@ -18,7 +18,6 @@ class TitleToolBar(QWidget):
 
         self.iconLabel = IconLabel(icon, self)
         self.titleLabel = TitleLabel(title, self) 
-        self.contentLabel = CaptionLabel(content, self)
         self._content = content 
         self.hBoxLayout = QHBoxLayout()
         self.vBoxLayout = QVBoxLayout(self)
@@ -26,8 +25,6 @@ class TitleToolBar(QWidget):
 
     def __initWidget(self):
         self.setFixedHeight(70)
-        self.contentLabel.setWordWrap(False)
-        self.contentLabel.setTextColor(QColor(118, 118, 118), QColor(208, 208, 208))
 
         self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.hBoxLayout.setSpacing(10)
@@ -38,7 +35,6 @@ class TitleToolBar(QWidget):
         self.vBoxLayout.setContentsMargins(25, 10, 0, 0)
         self.vBoxLayout.addLayout(self.hBoxLayout)
         self.vBoxLayout.addSpacing(2)
-        self.vBoxLayout.addWidget(self.contentLabel)
         self.vBoxLayout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
     
 
@@ -57,7 +53,7 @@ class TitleToolBar(QWidget):
     def resizeEvent(self, e):
         """ 重写QWidget的尺寸改变事件：更新文本截断显示 """
         super().resizeEvent(e)
-        self.elide_text()
+        #self.elide_text()
 
 class SeparatorWidget(QWidget):
     """ 分隔符部件 """

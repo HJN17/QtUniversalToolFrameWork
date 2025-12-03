@@ -82,7 +82,6 @@ class ItemMaskWidget(QWidget):
             
             y = p.visualItemRect(item1).y() # 获取项目的可视化矩形位置
 
-            #print(f"{y}-{self.y()}: {y - self.y()}")
 
             painter.translate(w, 0) # 平移坐标系，将文本绘制到正确位置
             # 绘制文本

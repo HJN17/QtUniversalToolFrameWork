@@ -191,8 +191,6 @@ class CustomStyleSheet(StyleSheetBase):
             return self.widget.property(self.LIGHT_QSS_KEY) or ''
         return self.widget.property(self.DARK_QSS_KEY) or ''
 
-
-
 class CustomStyleSheetWatcher(QObject):
     """ 自定义样式表监听器，继承自QObject，用于监听组件的自定义样式表变化 """
 

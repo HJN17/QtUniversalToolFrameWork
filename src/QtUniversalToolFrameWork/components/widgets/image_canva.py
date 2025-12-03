@@ -33,7 +33,6 @@ class ScaleLabel(QLabel):
         parent_height = self.parent().height()
         x = (parent_width - self.width()) // 2
         y = (parent_height - self.height()) // 2
-        #print(x, y)
         self.move(x, y)
 
 class ImageSearchFlyoutView(FlyoutViewBase):

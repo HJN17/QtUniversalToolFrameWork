@@ -324,7 +324,6 @@ class LineEdit(QLineEdit):
         left = len(self.leftButtons) * 24  # 左侧边距 = 左侧按钮数量 * 30
         right = len(self.rightButtons) * 24 + 22 * self.isClearButtonEnabled()  # 右侧边距 = 右侧按钮数量 * 30 + 清除按钮宽度（如果启用）
         m = self.textMargins()  # 获取当前文本边距
-        print(left, right, m.top(), m.bottom())
         self.setTextMargins(left, m.top(), right, m.bottom())  # 设置新的文本边距
 
     def focusOutEvent(self, e):

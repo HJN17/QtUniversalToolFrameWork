@@ -1,12 +1,13 @@
 # coding:utf-8
 import json
+import os
 from copy import deepcopy
 from enum import Enum 
 from pathlib import Path 
 from typing import List
 
 import darkdetect  # 导入系统主题检测库，用于自动识别系统深色/浅色主题
-from PyQt5.QtCore import QObject, pyqtSignal,QSettings
+from PyQt5.QtCore import QObject, pyqtSignal,QSettings,QCoreApplication,QFileInfo
 from PyQt5.QtGui import QColor
 
 class Theme(Enum):
@@ -183,7 +184,7 @@ class ConfigItem(QObject):
 
     @property
     def key(self):
-        return self.group+"."+self.name if self.name else self.group
+        return self.group+"_"+self.name if self.name else self.group
 
     def __str__(self):
         return f'{self.__class__.__name__}[value={self.value}]'
@@ -248,7 +249,17 @@ class QConfig(QObject):
 
     def __init__(self):
         super().__init__()
-        self.file = set.value("Config") # 配置文件路径
+
+        set = QSettings(QSettings.IniFormat, QSettings.UserScope, AUTHOR, "QtUniversalToolFrameWork")
+        set_dir = QFileInfo(set.fileName()).absolutePath()  # 提取目录路径
+        
+        if not set.contains("Config"):
+            set.setValue("Config", "config.json") 
+
+        self.file = os.path.join(set_dir, set.value("Config")) # 配置文件路径
+
+    def filePath(self):
+        return self.file
 
     def get(self, item):
         return item.value
@@ -297,9 +308,9 @@ class QConfig(QObject):
 
         return items
 
-    def save(self):
-        self.file.parent.mkdir(parents=True, exist_ok=True) 
+    
 
+    def save(self):
         with open(self.file, "w", encoding="utf-8") as f:
             json.dump(self.toDict(), f, ensure_ascii=False, indent=4)
 
@@ -318,9 +329,9 @@ class QConfig(QObject):
         # 构建配置项键与实例的映射（键格式："group.name"）
         items = {}
         for name in dir(self.__class__):
-            item = getattr(self.__class__, name)
+            item = getattr(self.__class__, name) 
             if isinstance(item, ConfigItem):
-                items[item.key] = item
+                items[item.key] = item 
 
         # 遍历JSON数据，更新配置项值
         for k, v in cfg.items():
@@ -328,11 +339,15 @@ class QConfig(QObject):
                 items[k].deserializeFrom(v)
             elif isinstance(v, dict):
                 for key, value in v.items():
-                    key = k + "." + key
+                    key = k + "_" + key
                     if items.get(key) is not None:
                         items[key].deserializeFrom(value)
 
       
+    def addConfigItem(self, item):
+        setattr(self.__class__, item.key, item)
+
+
 def isDarkTheme():
     return qconfig.get(qconfig.themeMode) == Theme.DARK
 
@@ -343,14 +358,13 @@ def isDarkThemeMode(theme=Theme.AUTO):
     return theme == Theme.DARK if theme != Theme.AUTO else isDarkTheme()
 
 
-AUTHOR = "Hu"
-VERSION = "0.1.2"
 
-set = QSettings("OCRAnnotationTool")
-set.setValue("Config","config.json")
+AUTHOR = "Hu"
+VERSION = "0.1.3"
 
 qconfig = QConfig()
-qconfig.load(set.value("Config"))
+qconfig.load(qconfig.filePath())
+
 
 
 

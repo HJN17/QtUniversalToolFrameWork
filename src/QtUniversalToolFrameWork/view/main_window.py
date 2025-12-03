@@ -13,7 +13,6 @@ from ..resources import resource
 
 from .home_interface import HomeInterface
 from .setting_interface import SettingInterface
-
 class MainWindow(FluentWindow):
 
     def __init__(self):
@@ -26,6 +25,9 @@ class MainWindow(FluentWindow):
 
         self.homeInterface = HomeInterface(self)
         self.settingInterface = SettingInterface(self)
+        # self.imageViewInterface = ImageViewInterface(self)
+        # self.imageViewInterface1 = ImageViewInterface1(self)
+        # self.imageViewInterface2 = ImageViewInterface2(self)
 
         self.initNavigation()
 
@@ -39,23 +41,20 @@ class MainWindow(FluentWindow):
         self.show()
         QApplication.processEvents()
 
-
-
-        QTimer.singleShot(100, self.splashScreen.finish) 
+        QTimer.singleShot(1500, self.splashScreen.finish) 
         self.themeListener.start()
 
     def initNavigation(self):
         """ 初始化导航栏，添加导航项和分隔符 """
 
-       #self.addScrollItem(self.imageViewInterface,self.imageViewInterface1,FIF.NAVIGATION, '导航')
+        # self.addScrollItem(self.imageViewInterface,self.imageViewInterface1,FIF.BUS, '功能1')
+        # self.addScrollItem(self.imageViewInterface,self.imageViewInterface2,FIF.CAFE, '功能2')
 
         self.addSubInterface(self.homeInterface, FIF.HOME,'首页')
         #self.addSubInterface(self.imageViewInterface, FIF.PHOTO,'图像工具')
         self.navigationInterface.addSeparator() 
 
         self.addSubInterface(self.settingInterface, FIF.SETTING, '设置', NavigationItemPosition.BOTTOM)
-
-    
 
     def initWindow(self):
         self.resize(980, 780)

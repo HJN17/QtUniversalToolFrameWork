@@ -5,14 +5,41 @@
 
 qt通用工具框架是一个基于python的qt框架，用于快速开发qt应用程序
 
-* PyPI package: https://pypi.org/project/QtUniversalToolFrameWork/
-* Free software: MIT License
-* Documentation: https://QtUniversalToolFrameWork.readthedocs.io.
+# Installation
 
-## Features
+## Stable release
 
-* TODO
+To install QtUniversalToolFrameWork, run this command in your terminal:
 
-## Credits
+```sh
+uv add QtUniversalToolFrameWork
+```
 
-This package was created with [Cookiecutter](https://github.com/audreyfeldroy/cookiecutter) and the [audreyfeldroy/cookiecutter-pypackage](https://github.com/audreyfeldroy/cookiecutter-pypackage) project template.
+Or if you prefer to use `pip`:
+
+```sh
+pip install QtUniversalToolFrameWork
+```
+
+## From source
+
+The source files for QtUniversalToolFrameWork can be downloaded from the [Github repo](https://github.com/HJN17/QtUniversalToolFrameWork).
+
+You can either clone the public repository:
+
+```sh
+git clone git://github.com/HJN17/QtUniversalToolFrameWork
+```
+
+Or download the [tarball](https://github.com/HJN17/QtUniversalToolFrameWork/tarball/master):
+
+```sh
+curl -OJL https://github.com/HJN17/QtUniversalToolFrameWork/tarball/master
+```
+
+Once you have a copy of the source, you can install it with:
+
+```sh
+cd QtUniversalToolFrameWork
+uv pip install .
+```

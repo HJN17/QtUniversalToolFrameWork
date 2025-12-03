@@ -1,6 +1,6 @@
 [project]
 name = "QtUniversalToolFrameWork"
-version = "0.1.2"
+version = "0.1.3"
 description = "qt通用工具框架是一个基于python的qt框架,用于快速开发qt应用程序"
 readme = "README.md"
 authors = [
@@ -28,9 +28,9 @@ test = [
 ]
 
 [project.urls]
-bugs = "https://github.com/HJN7/QtUniversalToolFrameWork/issues"
-changelog = "https://github.com/HJN7/QtUniversalToolFrameWork/blob/master/changelog.md"
-homepage = "https://github.com/HJN7/QtUniversalToolFrameWork"
+bugs = "https://github.com/HJN17/QtUniversalToolFrameWork/issues"
+changelog = "https://github.com/HJN17/QtUniversalToolFrameWork/blob/master/changelog.md"
+homepage = "https://github.com/HJN17/QtUniversalToolFrameWork"
 
 [project.scripts]
 QtUniversalToolFrameWork = "QtUniversalToolFrameWork.cli:app"

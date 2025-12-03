@@ -8,7 +8,7 @@ You can contribute in many ways:
 
 ### Report Bugs
 
-Report bugs at https://github.com/HJN7/QtUniversalToolFrameWork/issues.
+Report bugs at https://github.com/HJN17/QtUniversalToolFrameWork/issues.
 
 If you are reporting a bug, please include:
 
@@ -30,7 +30,7 @@ QtUniversalToolFrameWork could always use more documentation, whether as part of
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at https://github.com/HJN7/QtUniversalToolFrameWork/issues.
+The best way to send feedback is to file an issue at https://github.com/HJN17/QtUniversalToolFrameWork/issues.
 
 If you are proposing a feature:
 
