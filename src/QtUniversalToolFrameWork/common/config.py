@@ -246,11 +246,10 @@ class QConfig(QObject):
 
     checkUpdateAtStartUp = ConfigItem("Update", "CheckUpdateAtStartUp", True, BoolValidator())
 
-
     def __init__(self):
         super().__init__()
 
-        set = QSettings(QSettings.IniFormat, QSettings.UserScope, AUTHOR, "QtUniversalToolFrameWork")
+        set = QSettings(QSettings.IniFormat, QSettings.UserScope, AUTHOR, "QtUniversalToolFrameWork") # 配置文件路径
         set_dir = QFileInfo(set.fileName()).absolutePath()  # 提取目录路径
         
         if not set.contains("Config"):

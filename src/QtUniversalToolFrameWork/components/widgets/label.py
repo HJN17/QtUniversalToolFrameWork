@@ -183,7 +183,11 @@ class BodyLabel(FluentLabelBase):
 
 class CommandBarLabel(FluentLabelBase):
     """ 标题文本标签 """
-
+    def _init(self):
+        super()._init()
+        self.setWordWrap(False)
+        self.setTextColor(QColor(98, 98, 98), QColor(228, 228, 228))
+        
     def getFont(self):
         return getFont(13, QFont.DemiBold,'Arial') 
 

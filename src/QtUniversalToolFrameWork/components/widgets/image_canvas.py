@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt, QPoint, pyqtSignal, QPointF,QTimer
 
 from PyQt5.QtCore import pyqtSignal
 
-from ..widgets import SearchLineEdit,FlyoutViewBase,NumberEdit,Slider
+from . import SearchLineEdit,FlyoutViewBase,NumberEdit,Slider
 
 class ScaleLabel(QLabel):
     def __init__(self, parent=None):
