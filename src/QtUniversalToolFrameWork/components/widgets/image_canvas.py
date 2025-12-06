@@ -106,7 +106,8 @@ class ImageProgressWidget(QWidget):
         self.slider.valueChanged.connect(self.numberEdit.setValue)
         self.slider.valueChanged.connect(self.progress) 
         self._init_ui()
-        self.setRange(0, 100)
+        self.set_slider_range(0, 0)
+        
 
     def _init_ui(self):
         hBoxLayout = QHBoxLayout(self)
@@ -122,10 +123,13 @@ class ImageProgressWidget(QWidget):
         hBoxLayout.addWidget(self.slider)
         hBoxLayout.addWidget(self.numberEdit)
 
-    def setProgress(self, value: int):
+    def set_slider_width(self, value: int):
+        self.slider.setMinimumWidth(value)
+
+    def set_numberEdit_value(self, value: int):
         self.numberEdit.setValue(value)
     
-    def setRange(self, min: int, max: int):
+    def set_slider_range(self, min: int, max: int):
         self.slider.setRange(min, max)
         self.numberEdit.setRange(min, max)
 
