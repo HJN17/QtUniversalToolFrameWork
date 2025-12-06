@@ -12,11 +12,12 @@ maintainers = [
 classifiers = [
     # TODO
 ]
+
 license = {text = "MIT"}
 dependencies = [
   "PyQt5>=5.15.0",
 ]
-requires-python = ">= 3.9"
+requires-python = ">= 3.8"
 
 [project.optional-dependencies]
 test = [
