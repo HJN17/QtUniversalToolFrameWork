@@ -68,7 +68,8 @@ class SvgIconEngine(QIconEngine):
         super().__init__()
         self.svg = svg
 
-    def paint(self, painter, rect, mode, state):
+    def paint(self, painter, rect, mode, state): 
+        """ 绘制SVG图标 """
         drawSvgIcon(self.svg.encode(), painter, rect)  # 编码为bytes后绘制
 
     def clone(self) -> QIconEngine:
@@ -76,7 +77,6 @@ class SvgIconEngine(QIconEngine):
         return SvgIconEngine(self.svg)
 
     def pixmap(self, size, mode, state):
-        """ 生成SVG图标像素图（逻辑与FluentIconEngine类似） """
         image = QImage(size, QImage.Format_ARGB32)
         image.fill(Qt.transparent)
         pixmap = QPixmap.fromImage(image, Qt.NoFormatConversion)
@@ -157,7 +157,7 @@ class FluentIconBase:
         return QIcon(SvgIconEngine(writeSvg(path, fill=color)))
     
     
-    def qicon(self, reverse=False) -> QIcon:
+    def qicon(self, reverse=False) -> QIcon: # 返回QIcon对象
        
         return QIcon(FluentIconEngine(self, reverse))
 
@@ -356,6 +356,9 @@ class FluentIcon(FluentIconBase, Enum):
     EMOJI_TAB_SYMBOLS = "EmojiTabSymbols"
     EXPRESSIVE_INPUT_ENTRY = "ExpressiveInputEntry"
 
+    CROSS = "Cross"
+
+
     def path(self, theme=Theme.AUTO) -> str:
 
         color = getIconColor(theme)
@@ -385,6 +388,15 @@ def toQIcon(icon: Union[QIcon, FluentIconBase, str]) -> QIcon:
     elif isinstance(icon, FluentIconBase):
         return icon.qicon() 
     return icon 
+
+
+
+
+
+
+
+
+
 
 
 class Action(QAction):

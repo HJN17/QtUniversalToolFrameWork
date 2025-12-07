@@ -61,7 +61,7 @@ class MainWindow(FluentWindow):
         self.setMinimumWidth(860)
         
         self.setWindowIcon(QIcon(':/resource/images/logo.png'))
-        self.setWindowTitle('FrameCoreTool')
+        self.setWindowTitle('QtUniversalToolFrameWork')
     
 
     def resizeEvent(self, e):

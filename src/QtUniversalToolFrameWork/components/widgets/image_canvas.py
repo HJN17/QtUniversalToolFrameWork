@@ -1,10 +1,15 @@
+# coding=utf-8
 from PyQt5.QtWidgets import QLabel,QFrame,QWidget,QHBoxLayout,QVBoxLayout,QCompleter
-from PyQt5.QtGui import QPainter, QPixmap, QTransform
-from PyQt5.QtCore import Qt, QPoint, pyqtSignal, QPointF,QTimer
+from PyQt5.QtGui import QPainter, QPixmap, QTransform,QFont,QColor,QPainterPath
+from PyQt5.QtCore import Qt, QPoint, pyqtSignal, QPointF,QTimer,QRectF
 
 from PyQt5.QtCore import pyqtSignal
 
-from . import SearchLineEdit,FlyoutViewBase,NumberEdit,Slider
+from ...common.font import getFont
+
+from .line_edit import SearchLineEdit,NumberEdit
+from .flyout import FlyoutViewBase
+from .slider import Slider
 
 class ScaleLabel(QLabel):
     def __init__(self, parent=None):
@@ -12,17 +17,46 @@ class ScaleLabel(QLabel):
         self.setFixedSize(60, 26)
         self.hide_scale()
         self.setAlignment(Qt.AlignCenter)
-        self.setStyleSheet("background-color: rgba(0, 0, 0, 90);border-radius: 13px;color:white;font-weight:900;")
+        self._scale = 1
+        #self.setStyleSheet("background-color: rgba(0, 0, 0, 90);border-radius: 13px;color:white;font-weight:900;")
     
     def show_scale(self, scale):
         """ 显示缩放比例标签 """
-        self.setText(f"{int(scale*100)}%")
+        self._scale = int(scale*100)
         # 判断是否可见
         if not self.isVisible():
             self.show()
             QTimer.singleShot(2000, self.hide_scale)
         
     
+
+    def paintEvent(self, e):
+        """ 绘制事件处理 """
+        painter = QPainter(self)
+
+        painter.setRenderHints(
+            QPainter.TextAntialiasing |
+            QPainter.HighQualityAntialiasing |
+            QPainter.SmoothPixmapTransform 
+        )
+        
+        rectf = QRectF(self.rect()) 
+        rounded_rect = QPainterPath() # 创建圆角矩形路径
+        rounded_rect.addRoundedRect(rectf, 13, 13)
+
+        painter.setBrush(QColor(0, 0, 0, 90))
+        painter.setPen(Qt.NoPen)
+        painter.drawPath(rounded_rect)
+
+        
+        painter.setPen(QColor(255, 255, 255))
+
+        rectf.adjust(5,1,-1,-1) # 调整矩形框，留出边框宽度
+
+        painter.setFont(getFont(12, QFont.ExtraBold))
+
+        painter.drawText(rectf, Qt.AlignCenter, f"{self._scale}%")
+
     def hide_scale(self):
         """ 隐藏缩放比例标签 """
         self.hide()
@@ -117,7 +151,7 @@ class ImageProgressWidget(QWidget):
         self.slider.setMinimumWidth(250)
         self.slider.setFixedHeight(13)
 
-        self.numberEdit.setFixedWidth(55)
+        self.numberEdit.setFixedWidth(45)
         self.numberEdit.setFixedHeight(26)
 
         hBoxLayout.addWidget(self.slider)
@@ -126,8 +160,8 @@ class ImageProgressWidget(QWidget):
     def set_slider_width(self, value: int):
         self.slider.setMinimumWidth(value)
 
-    def set_numberEdit_value(self, value: int):
-        self.numberEdit.setValue(value)
+    def set_slider_value(self, value: int):
+       self.slider.setValue(value)
     
     def set_slider_range(self, min: int, max: int):
         self.slider.setRange(min, max)
