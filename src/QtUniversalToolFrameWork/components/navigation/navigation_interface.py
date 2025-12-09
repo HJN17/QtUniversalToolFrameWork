@@ -9,7 +9,6 @@ from .navigation_panel import NavigationPanel, NavigationItemPosition, Navigatio
 from .navigation_widget import NavigationPushButton
 from ...common.icon import FluentIconBase
 
-
 class NavigationInterface(QWidget):
     """ 导航界面组件，继承自QWidget，用于管理应用程序的导航菜单"""
 
@@ -19,7 +18,7 @@ class NavigationInterface(QWidget):
         super().__init__(parent=parent)
 
         self.panel = NavigationPanel(self)
-        self.panel.installEventFilter(self)
+        self.panel.installEventFilter(self) # 安装事件过滤器，用于处理导航面板的事件
         self.panel.displayModeChanged.connect(self.displayModeChanged)  # 连接面板的显示模式变化信号到当前界面的同名信号（转发信号）
 
         self.resize(50, self.height())

@@ -301,7 +301,7 @@ class FluentAnimation(QPropertyAnimation):
         super().__init__(parent=parent)
         self.setSpeed(FluentAnimationSpeed.FAST) 
         self.setEasingCurve(self.curve()) 
-
+    
     @classmethod
     def createBezierCurve(cls, x1, y1, x2, y2):
         curve = QEasingCurve(QEasingCurve.BezierSpline)

@@ -13,7 +13,7 @@ class AbstractViewer(QObject):
     item_deleted = pyqtSignal(int)   
     item_inserted = pyqtSignal(int)  
     model_reset = pyqtSignal()  
-
+    skip_previous_item = pyqtSignal() #跳转之前项
     def __init__(self, parent=None):
         super().__init__(parent)
         self._items = []
@@ -36,6 +36,11 @@ class AbstractViewer(QObject):
     @property
     def count(self) -> int:
         return len(self._items)
+
+    #判断是否为空
+    def is_empty(self) -> bool:
+        return self.count == 0
+
 
     def set_items(self, items):
         if not isinstance(items, (list, tuple)):
@@ -80,6 +85,7 @@ class AbstractViewer(QObject):
             raise TypeError("index 必须是整数。")
 
         if 0 <= index < self.count and index != self._current_index:
+            self.skip_previous_item.emit()
             self._current_index = index
             self.current_item_changed.emit()
 
