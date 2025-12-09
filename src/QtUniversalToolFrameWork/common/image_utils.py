@@ -184,7 +184,3 @@ class ImageManager(AbstractViewer):
         """ 预加载线程完成信号槽函数：处理预加载完成后的缓存更新 """
         if pixmap:
             self._pixmap_cache.put(path, pixmap)
-
-    def closeEvent(self, event):
-        self._stop_preload()
-        event.accept()
