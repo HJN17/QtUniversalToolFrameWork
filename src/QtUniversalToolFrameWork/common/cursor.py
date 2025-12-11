@@ -32,7 +32,6 @@ class CursorStyle(Enum):
             Qt.SmoothTransformation
         )
 
-
 class CursorManager:
    
     _HOT_SPOT_MAP: Dict[CursorStyle, Tuple[int, int]] = {

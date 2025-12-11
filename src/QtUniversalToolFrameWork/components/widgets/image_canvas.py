@@ -1,7 +1,7 @@
 # coding=utf-8
 from PyQt5.QtWidgets import QLabel,QFrame,QWidget,QHBoxLayout,QVBoxLayout,QCompleter
 from PyQt5.QtGui import QPainter, QPixmap, QTransform,QFont,QColor,QPainterPath
-from PyQt5.QtCore import Qt, QPoint, pyqtSignal, QPointF,QTimer,QRectF
+from PyQt5.QtCore import Qt, QPoint, pyqtSignal, QPointF,QTimer,QRectF,QSize
 
 from PyQt5.QtCore import pyqtSignal
 
@@ -18,7 +18,6 @@ class ScaleLabel(QLabel):
         self.hide_scale()
         self.setAlignment(Qt.AlignCenter)
         self._scale = 1
-        #self.setStyleSheet("background-color: rgba(0, 0, 0, 90);border-radius: 13px;color:white;font-weight:900;")
     
     def show_scale(self, scale):
         """ 显示缩放比例标签 """
@@ -28,7 +27,6 @@ class ScaleLabel(QLabel):
             self.show()
             QTimer.singleShot(2000, self.hide_scale)
         
-    
 
     def paintEvent(self, e):
         """ 绘制事件处理 """
@@ -51,7 +49,7 @@ class ScaleLabel(QLabel):
         
         painter.setPen(QColor(255, 255, 255))
 
-        rectf.adjust(5,1,-1,-1) # 调整矩形框，留出边框宽度
+        rectf.adjust(5,1,-1,-1)
 
         painter.setFont(getFont(12, QFont.ExtraBold))
 
@@ -181,7 +179,7 @@ class ImageCanvas(QFrame):
         super().__init__(parent)
         self.parent = parent
 
-        self._original_pixmap  = None
+        self.original_pixmap  = None
         self._scaled_pixmap = None 
 
         self.scale = 1.0 
@@ -191,15 +189,23 @@ class ImageCanvas(QFrame):
         self.last_pos = QPoint()
         self.last_canvas_size = self.size()
 
+        self.original_w_h = None
+        self.total_rotate_angle = 0
+
+
         self.setFocusPolicy(Qt.StrongFocus)
         self._scale_label  = ScaleLabel(self)
 
+
     def load_pixmap(self, pixmap: QPixmap):
 
-        self._original_pixmap = pixmap if not pixmap.isNull() else None
+        self.original_pixmap = pixmap if not pixmap.isNull() else None
         self._scaled_pixmap = None
 
-        if self._original_pixmap:
+        if self.original_pixmap:
+
+            self.original_w_h = QSize(self.original_pixmap.width(), self.original_pixmap.height())
+
             self.init_load_image()    
             self.update_scaled_image()
 
@@ -212,13 +218,13 @@ class ImageCanvas(QFrame):
 
     def init_load_image(self):
         """初始化图像加载：计算初始缩放比例和居中偏移"""
-        if not self._original_pixmap or self.width() <= 0 or self.height() <= 0:
+        if not self.original_pixmap or self.width() <= 0 or self.height() <= 0:
             self.scale = 1.0
             self.offset = QPoint(0, 0)
             return
         
         canvas_w, canvas_h = self.width(), self.height()
-        img_w, img_h = self._original_pixmap.width(), self._original_pixmap.height()
+        img_w, img_h = self.original_pixmap.width(), self.original_pixmap.height()
         scale_w = canvas_w / img_w
         scale_h = canvas_h / img_h
         self.scale = min(scale_w, scale_h)
@@ -233,11 +239,11 @@ class ImageCanvas(QFrame):
 
     def update_scaled_image(self):
 
-        if not self._original_pixmap:
+        if not self.original_pixmap:
             self._scaled_pixmap = None
             return
         
-        img_w, img_h = self._original_pixmap.width(), self._original_pixmap.height()
+        img_w, img_h = self.original_pixmap.width(), self.original_pixmap.height()
         scaled_w = int(img_w * self.scale)
         scaled_h = int(img_h * self.scale)
    
@@ -245,14 +251,14 @@ class ImageCanvas(QFrame):
             self._scaled_pixmap = None
             return
 
-        self._scaled_pixmap = self._original_pixmap.scaled(
+        self._scaled_pixmap = self.original_pixmap.scaled(
             scaled_w, scaled_h,
             Qt.KeepAspectRatio,
             Qt.SmoothTransformation
         )
 
     def _update_zoom_offset(self, scale_factor: float, center_pos: QPoint):
-        if not self._original_pixmap:
+        if not self.original_pixmap:
             return
 
        
@@ -276,7 +282,7 @@ class ImageCanvas(QFrame):
 
 
     def zoom_to(self, scale_factor: float):
-        if not self._original_pixmap:
+        if not self.original_pixmap:
             return
         center_pos = self.rect().center() # 缩放中心点：画布中心
         self._update_zoom_offset(scale_factor, center_pos)
@@ -289,27 +295,20 @@ class ImageCanvas(QFrame):
         self.zoom_to(self.ZOOM_OUT_FACTOR)
     
     def rotate_image(self):
-        if not self._original_pixmap:
+
+        if not self.original_pixmap:
             return
 
         transform = QTransform().rotate(self.ROTATE_ANGLE)
-        self._original_pixmap = self._original_pixmap.transformed(transform, Qt.SmoothTransformation)
+        self.original_pixmap = self.original_pixmap.transformed(transform, Qt.SmoothTransformation)
+        
+        self.total_rotate_angle += self.ROTATE_ANGLE
+        self.total_rotate_angle %= 360  # 角度归一化（0-359）
+
 
         self.init_load_image()
         self.update_scaled_image()
         self.update()
-
-    def paintEvent(self, event):
-        painter = QPainter(self)
-
-        painter.setRenderHints(
-            QPainter.TextAntialiasing |
-            QPainter.HighQualityAntialiasing |
-            QPainter.SmoothPixmapTransform
-        )
-        
-        if self._scaled_pixmap:
-            painter.drawPixmap(QPointF(self.offset.x(), self.offset.y()),self._scaled_pixmap)
 
 
     def mousePressEvent(self, event):
@@ -333,7 +332,7 @@ class ImageCanvas(QFrame):
 
         :param event: 鼠标事件对象。
         """
-        if self.dragging and self._original_pixmap  is not None:
+        if self.dragging and self.original_pixmap  is not None:
             delta = event.pos() - self.last_pos 
             self.offset += delta  # 更新图像显示的偏移量
             self.last_pos = event.pos()  # 记录当前鼠标位置
@@ -359,7 +358,7 @@ class ImageCanvas(QFrame):
 
     def wheelEvent(self, event):
         """处理鼠标滚轮事件：以鼠标位置为中心缩放"""
-        if not self._original_pixmap:
+        if not self.original_pixmap:
             super().wheelEvent(event)
             return
 
@@ -381,7 +380,7 @@ class ImageCanvas(QFrame):
             return
 
         self._scale_label.move_scale_label()
-        if self._original_pixmap:
+        if self.original_pixmap:
             self.init_load_image()
             self.update_scaled_image()
             self.update()
