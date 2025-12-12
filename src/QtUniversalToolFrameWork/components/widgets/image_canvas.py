@@ -171,7 +171,7 @@ class ImageCanvas(QFrame):
     MAX_SCALE = 9.0
     ZOOM_IN_FACTOR = 1.2 
     ZOOM_OUT_FACTOR = 0.8 
-    WHEEL_ZOOM_FACTOR = 1.1 
+    WHEEL_ZOOM_FACTOR = 1.2 
     ROTATE_ANGLE = 90
     RESIZE_THRESHOLD = 5 
 
