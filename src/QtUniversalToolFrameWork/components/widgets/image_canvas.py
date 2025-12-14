@@ -189,9 +189,8 @@ class ImageCanvas(QFrame):
         self.last_pos = QPoint()
         self.last_canvas_size = self.size()
 
-        self.original_w_h = None
+        self.original_pixmap_w_h = None
         self.total_rotate_angle = 0
-
 
         self.setFocusPolicy(Qt.StrongFocus)
         self._scale_label  = ScaleLabel(self)
@@ -311,6 +310,18 @@ class ImageCanvas(QFrame):
         self.update()
 
 
+    def paintEvent(self, event):
+        painter = QPainter(self)
+
+        painter.setRenderHints(
+            QPainter.TextAntialiasing |
+            QPainter.HighQualityAntialiasing |
+            QPainter.SmoothPixmapTransform
+        )
+        
+        if self._scaled_pixmap:
+            painter.drawPixmap(QPointF(self.offset.x(), self.offset.y()),self._scaled_pixmap)
+
     def mousePressEvent(self, event):
         """
         处理鼠标按下事件。
@@ -339,7 +350,7 @@ class ImageCanvas(QFrame):
             self.update()
             return
     
-    
+
         super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
