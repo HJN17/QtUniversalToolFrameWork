@@ -355,7 +355,6 @@ class ImageCanvas(QFrame):
            
         super().mouseReleaseEvent(event)
 
-
     def wheelEvent(self, event):
         """处理鼠标滚轮事件：以鼠标位置为中心缩放"""
         if not self.original_pixmap:
