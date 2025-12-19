@@ -7,7 +7,7 @@ from PyQt5.QtCore import QFile, QObject, QEvent
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QWidget,QGraphicsDropShadowEffect
 from .config import qconfig, Theme, isDarkTheme
-
+from ..resources import resource
 
 class StyleSheetManager(QObject):
     """ 样式表管理器，用于注册、管理和自动更新界面组件的样式表 """
@@ -91,7 +91,7 @@ class FluentStyleSheet(StyleSheetBase, Enum):
 
     MENU = "menu"   # 菜单组件样式
     LABEL = "label" # 标签组件样式
-    PIVOT = "pivot" # 选项卡组件样式
+    
     BUTTON = "button" # 按钮组件样式
     DIALOG = "dialog" # 对话框组件样式
     SLIDER = "slider" # 滑块组件样式
@@ -124,17 +124,16 @@ class FluentStyleSheet(StyleSheetBase, Enum):
     EXPAND_SETTING_CARD = "expand_setting_card"   # 可展开设置卡片组件样式
     NAVIGATION_INTERFACE = "navigation_interface"   # 导航界面组件样式
 
-
+    PIVOT = "pivot" # 选项卡组件样式
     SAMPLE_CARD = "sample_card"
     HOME_INTERFACE = "home_interface"
     SETTING_INTERFACE = "setting_interface"
 
-
     def path(self, theme=Theme.AUTO):
         
         theme = qconfig.themeMode.value if theme == Theme.AUTO else theme
-        
         return f":/resource/qss/{theme.value.lower()}/{self.value}.qss"
+        
 
 class StyleSheetFile(StyleSheetBase):
     """ 文件型样式源类，继承自StyleSheetBase，用于从本地文件加载样式表 """

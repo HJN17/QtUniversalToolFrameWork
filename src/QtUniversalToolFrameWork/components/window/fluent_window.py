@@ -98,8 +98,7 @@ class FluentWindow(BackgroundAnimation, FramelessWindow):
 
 
 
-    def addScrollItem(self,super_interface: QWidget, interface: QWidget, icon: FluentIconBase, text: str,
-                                onClick=None) -> NavigationPushButton:
+    def addScrollItem(self,super_interface: QWidget, interface: QWidget) -> NavigationPushButton:
         
         if not interface.objectName():
             raise ValueError("子界面objectName不能为空")
@@ -112,10 +111,11 @@ class FluentWindow(BackgroundAnimation, FramelessWindow):
 
         return self.navigationInterface.addItemScroll(
             routeKey=routeKey,
-            icon=icon,
-            text=text, 
-            onClick=onClick,
-            tooltip=text
+            icon=interface.icon,
+            text=interface.text, 
+            onClick=interface.on_click,
+            tooltip=interface.tip,
+            checkable = interface.checkable
         )
 
 

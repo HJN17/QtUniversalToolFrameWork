@@ -13,7 +13,7 @@ from ..widgets import IconWidget,TitleLabel
 class TitleToolBar(QWidget):
     """ 标题工具条 """
     
-    def __init__(self,icon: Union[FluentIconBase, QIcon, str],title: str, content: str, parent=None):
+    def __init__(self,icon: Union[FluentIconBase, QIcon, str],title: str, content: str = None, parent=None):
         super().__init__(parent=parent)
 
         self.iconLabel = IconLabel(icon, self)
@@ -24,7 +24,7 @@ class TitleToolBar(QWidget):
         self.__initWidget()
 
     def __initWidget(self):
-        self.setFixedHeight(70)
+        self.setFixedHeight(50)
 
         self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.hBoxLayout.setSpacing(10)
@@ -32,12 +32,12 @@ class TitleToolBar(QWidget):
         self.hBoxLayout.addWidget(self.titleLabel, 0,Qt.AlignLeft)
         self.hBoxLayout.addStretch(1)
 
-        self.vBoxLayout.setContentsMargins(25, 10, 0, 0)
         self.vBoxLayout.addLayout(self.hBoxLayout)
-        self.vBoxLayout.addSpacing(2)
         self.vBoxLayout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
     
-
+    def content(self):
+        return self._content
+    
     def elide_text(self):
 
         left, _, right, _ = self.vBoxLayout.getContentsMargins()

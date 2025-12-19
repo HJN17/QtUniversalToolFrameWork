@@ -9,7 +9,7 @@ from ...common.icon import FluentIcon, Icon, Action
 from ...common.style_sheet import isDarkTheme,setStyleSheet
 
 from .menu import RoundMenu, MenuAnimationType
-from .button import TransparentToggleToolButton, CustomStandardButton
+from .button import  CustomStandardButton
 from .tool_tip import ToolTipFilter
 from .flyout import FlyoutViewBase, Flyout
 
@@ -201,8 +201,8 @@ class CommandSeparator(QWidget):
         # 创建绘制器
         painter = QPainter(self)
         # 根据当前主题设置分隔线颜色
-        painter.setPen(QColor(255, 255, 255, 21)
-                       if isDarkTheme() else QColor(0, 0, 0, 15))
+        painter.setPen(QColor(255, 255, 255, 70)
+                       if isDarkTheme() else QColor(0, 0, 0, 70))
         # 绘制垂直线
         painter.drawLine(5, 2, 5, self.height() - 4)
 
@@ -438,7 +438,7 @@ class CommandBar(QFrame):
         button.setAction(action)
         button.setToolButtonStyle(self.toolButtonStyle())
         button.setTight(self.isButtonTight())
-        button.setIconSize(self.iconSize())
+        button.setIconSize(action.get_size())
         button.setFont(self.font())
         return button
 

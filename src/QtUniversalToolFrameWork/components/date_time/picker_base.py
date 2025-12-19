@@ -173,7 +173,7 @@ class PickerPanel(QWidget):
         self.vBoxLayout.addLayout(self.listLayout, 1)
         self.vBoxLayout.addWidget(self.hSeparatorWidget)
         self.vBoxLayout.addLayout(self.buttonLayout, 1)
-        self.vBoxLayout.setSizeConstraint(QVBoxLayout.SetMinimumSize)
+        self.vBoxLayout.setSizeConstraint(QVBoxLayout.SetMinimumSize) # 设置布局大小约束为固定大小
 
         self.buttonLayout.setSpacing(6)
         self.buttonLayout.setContentsMargins(3, 3, 3, 3)

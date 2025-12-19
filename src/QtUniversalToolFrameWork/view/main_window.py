@@ -11,7 +11,7 @@ from ..components.window import FluentWindow, SplashScreen
 from ..components.navigation import NavigationInterface, NavigationItemPosition
 from ..resources import resource
 
-from .home_interface import HomeInterface
+from .home_interface import HomeInterface, HomeInterface1, HomeInterface2
 from .setting_interface import SettingInterface
 class MainWindow(FluentWindow):
 
@@ -24,10 +24,11 @@ class MainWindow(FluentWindow):
         self.themeListener = SystemThemeListener(self)
 
         self.homeInterface = HomeInterface(self)
+        # self.homeInterface1 = HomeInterface1(self)
+        # self.homeInterface2 = HomeInterface2(self)
+
         self.settingInterface = SettingInterface(self)
-        # self.imageViewInterface = ImageViewInterface(self)
-        # self.imageViewInterface1 = ImageViewInterface1(self)
-        # self.imageViewInterface2 = ImageViewInterface2(self)
+        
 
         self.initNavigation()
 
@@ -47,11 +48,10 @@ class MainWindow(FluentWindow):
     def initNavigation(self):
         """ 初始化导航栏，添加导航项和分隔符 """
 
-        # self.addScrollItem(self.imageViewInterface,self.imageViewInterface1,FIF.BUS, '功能1')
-        # self.addScrollItem(self.imageViewInterface,self.imageViewInterface2,FIF.CAFE, '功能2')
+        # self.addScrollItem(self.homeInterface,self.homeInterface1,FIF.BUS, '功能1',checkable=True)
+        # self.addScrollItem(self.homeInterface,self.homeInterface2,FIF.CAFE, '功能2')
 
         self.addSubInterface(self.homeInterface, FIF.HOME,'首页')
-        #self.addSubInterface(self.imageViewInterface, FIF.PHOTO,'图像工具')
         self.navigationInterface.addSeparator() 
 
         self.addSubInterface(self.settingInterface, FIF.SETTING, '设置', NavigationItemPosition.BOTTOM)
@@ -63,7 +63,6 @@ class MainWindow(FluentWindow):
         self.setWindowIcon(QIcon(':/resource/images/logo.png'))
         self.setWindowTitle('QtUniversalToolFrameWork')
     
-
     def resizeEvent(self, e):
         super().resizeEvent(e)
         if hasattr(self, 'splashScreen'):

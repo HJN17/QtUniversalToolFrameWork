@@ -31,8 +31,8 @@ class NavigationInterface(QWidget):
         return self.panel.insertItem(-1,routeKey, icon, text, onClick,position, tooltip)
 
     def addItemScroll(self, routeKey: str, icon: FluentIconBase, text: str, onClick=None,
-                 tooltip: str = None) -> NavigationPushButton:
-        return self.panel.insertItem(-1,routeKey, icon, text, onClick,NavigationItemPosition.SCROLL, tooltip)
+                 tooltip: str = None,checkable=False) -> NavigationPushButton:
+        return self.panel.insertItem(-1,routeKey, icon, text, onClick,NavigationItemPosition.SCROLL, tooltip,checkable)
 
     def setDisabledItems(self, routeKeys:list[str]):
         self.panel.setDisabledItems(routeKeys)
@@ -62,3 +62,7 @@ class NavigationInterface(QWidget):
 
         if e.oldSize().height() != self.height():
             self.panel.setFixedHeight(self.height())
+
+
+
+

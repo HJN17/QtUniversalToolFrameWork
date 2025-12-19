@@ -16,7 +16,6 @@ from ..dialog_box.color_dialog import ColorDialog
 from ..widgets.switch_button import SwitchButton, IndicatorPosition
 from ..widgets.slider import Slider
 from ..widgets.icon_widget import IconWidget
-from ..widgets.button import HyperlinkButton
 
 
 
@@ -27,14 +26,12 @@ class SettingIconWidget(IconWidget):
         """ 重写绘制事件，自定义图标绘制逻辑
         :param e: 绘制事件对象，包含事件相关信息
         """
-        painter = QPainter(self)  # 创建QPainter对象，用于在当前部件(self)上绘制
+        painter = QPainter(self) 
 
-        if not self.isEnabled():  # 判断部件是否禁用
-            painter.setOpacity(0.36)  # 禁用时设置透明度为0.36（半透明效果）
-
-        # 设置绘制提示：启用抗锯齿和平滑 pixmap 变换，提升绘制质量
+        if not self.isEnabled():
+            painter.setOpacity(0.36) 
         painter.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
-        drawIcon(self._icon, painter, self.rect())  # 调用自定义drawIcon函数绘制图标，参数为图标对象、画家对象、绘制区域（当前部件矩形区域）
+        drawIcon(self._icon, painter, self.rect()) 
 
 
 
@@ -48,7 +45,7 @@ class SettingCard(QFrame):
         :param content: 卡片内容文本（可选，默认为None）
         :param parent: 父部件（可选，默认为None）
         """
-        super().__init__(parent=parent)  # 调用父类QFrame的初始化方法
+        super().__init__(parent=parent)  
         self.iconLabel = SettingIconWidget(icon, self)  # 创建图标标签部件，使用自定义的SettingIconWidget
         self.titleLabel = QLabel(title, self)  # 创建标题标签，显示标题文本
         self.contentLabel = QLabel(content or '', self)  # 创建内容标签，显示内容文本（无内容时为空字符串）

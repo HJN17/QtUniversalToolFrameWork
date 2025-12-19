@@ -19,30 +19,30 @@ from .menu import RoundMenu, MenuAnimationType
 class PushButton(QPushButton):
     """ 基础按钮类"""
 
-    @singledispatchmethod  # 用于支持函数重载的装饰器
+    @singledispatchmethod 
     def __init__(self, parent: QWidget = None):
-        super().__init__(parent)  # 调用父类QPushButton的构造函数
-        FluentStyleSheet.BUTTON.apply(self)  # 应用Fluent风格样式表
-        self.isPressed = False  # 标记按钮是否被按下
-        self.isHover = False  # 标记鼠标是否悬停在按钮上
-        self.setIconSize(QSize(16, 16))  # 设置图标尺寸为16x16像素
-        self.setIcon(None)  # 初始设置为无图标
-        setFont(self)  # 设置按钮字体
-        self._postInit()  # 调用子类可能重写的初始化后方法
+        super().__init__(parent)  
+        FluentStyleSheet.BUTTON.apply(self) 
+        self.isPressed = False 
+        self.isHover = False  
+        self.setIconSize(QSize(16, 16))
+        self.setIcon(None) 
+        setFont(self) 
+        self._postInit()  
 
-    @__init__.register  # 注册带文本和可选图标的构造函数
+    @__init__.register # 注册带文本和可选图标的构造函数
     def _(self, text: str, parent: QWidget = None, icon: Union[QIcon, str, FluentIconBase] = None):
-        self.__init__(parent=parent)  # 调用无参构造函数
-        self.setText(text)  # 设置按钮文本
-        self.setIcon(icon)  # 设置按钮图标
+        self.__init__(parent=parent) 
+        self.setText(text)  
+        self.setIcon(icon)
 
-    @__init__.register  # 注册带图标和文本的构造函数
+    @__init__.register 
     def _(self, icon: QIcon, text: str, parent: QWidget = None):
-        self.__init__(text, parent, icon)  # 调用带文本的构造函数
+        self.__init__(text, parent, icon)  
 
-    @__init__.register  # 注册带Fluent图标和文本的构造函数
+    @__init__.register 
     def _(self, icon: FluentIconBase, text: str, parent: QWidget = None):
-        self.__init__(text, parent, icon)  # 调用带文本的构造函数
+        self.__init__(text, parent, icon) 
 
     def _postInit(self):
         """ 初始化后钩子方法，供子类重写 """
@@ -58,73 +58,73 @@ class PushButton(QPushButton):
         self.update()  # 触发重绘
 
     def icon(self):
-        """ 获取按钮图标（转换为QIcon类型） """
         return toQIcon(self._icon)  # 将存储的图标转换为QIcon返回
 
     def setProperty(self, name: str, value) -> bool:
-        """ 重写setProperty方法，处理icon属性的特殊情况 """
         if name != 'icon':  # 如果不是icon属性，调用父类方法
             return super().setProperty(name, value)
 
-        self.setIcon(value)  # 是icon属性时调用自定义的setIcon方法
+        self.setIcon(value) 
         return True
 
     def mousePressEvent(self, e):
-        """ 处理鼠标按下事件，设置isPressed标记 """
-        self.isPressed = True  # 标记按钮被按下
-        super().mousePressEvent(e)  # 调用父类方法处理事件
+        self.isPressed = True 
+        super().mousePressEvent(e)  
 
     def mouseReleaseEvent(self, e):
-        """ 处理鼠标释放事件，重置isPressed标记 """
-        self.isPressed = False  # 标记按钮未被按下
-        super().mouseReleaseEvent(e)  # 调用父类方法处理事件
+        self.isPressed = False 
+        super().mouseReleaseEvent(e) 
 
     def enterEvent(self, e):
-        """ 处理鼠标进入事件，设置isHover标记并触发重绘 """
-        self.isHover = True  # 标记鼠标悬停
-        self.update()  # 触发重绘以显示悬停效果
+        self.isHover = True 
+        self.update() 
 
     def leaveEvent(self, e):
-        """ 处理鼠标离开事件，重置isHover标记并触发重绘 """
-        self.isHover = False  # 标记鼠标未悬停
-        self.update()  # 触发重绘以恢复默认效果
+        self.isHover = False
+        self.update() 
 
     def _drawIcon(self, icon, painter, rect, state=QIcon.Off):
-        """ 绘制图标的内部方法
-        icon: 要绘制的图标
-        painter: QPainter绘图对象
-        rect: 绘制区域
-        state: 图标状态（默认为QIcon.Off）
-        """
-        drawIcon(icon, painter, rect, state)  # 调用通用的图标绘制函数
+        
+        drawIcon(icon, painter, rect, state)  
 
     def paintEvent(self, e):
         """ 处理重绘事件，绘制按钮和图标 """
-        super().paintEvent(e)  # 调用父类方法处理基本绘制
-        if self.icon().isNull():  # 如果没有图标，直接返回
+        super().paintEvent(e)  
+        if self.icon().isNull():  
             return
 
-        painter = QPainter(self)  # 创建绘图对象
-        painter.setRenderHints(QPainter.Antialiasing |  # 设置抗锯齿
-                               QPainter.SmoothPixmapTransform)  # 设置平滑像素变换
+        painter = QPainter(self) 
+        painter.setRenderHints(QPainter.Antialiasing | 
+                               QPainter.SmoothPixmapTransform)  
 
-        if not self.isEnabled():  # 如果按钮被禁用，设置透明度
+        if not self.isEnabled(): 
             painter.setOpacity(0.3628)
-        elif self.isPressed:  # 如果按钮被按下，设置不同的透明度
+        elif self.isPressed:  
             painter.setOpacity(0.786)
 
-        w, h = self.iconSize().width(), self.iconSize().height()  # 获取图标尺寸
-        y = (self.height() - h) / 2  # 计算图标垂直居中位置
-        mw = self.minimumSizeHint().width()  # 获取最小尺寸提示的宽度
-        if mw > 0:  # 如果有最小宽度
-            x = 12 + (self.width() - mw) // 2  # 计算图标水平位置
+        w, h = self.iconSize().width(), self.iconSize().height() 
+        y = (self.height() - h) / 2  
+        mw = self.minimumSizeHint().width()  
+        if mw > 0: 
+            x = 12 + (self.width() - mw) // 2 
         else:
-            x = 12  # 默认水平位置
+            x = 12 
 
-        if self.isRightToLeft():  # 如果是从右到左的布局
-            x = self.width() - w - x  # 调整图标水平位置
+        if self.isRightToLeft(): 
+            x = self.width() - w - x 
 
-        self._drawIcon(self._icon, painter, QRectF(x, y, w, h))  # 绘制图标
+        self._drawIcon(self._icon, painter, QRectF(x, y, w, h))
+
+
+
+
+
+
+
+
+
+
+
 
 
 class PrimaryPushButton(PushButton):
@@ -567,7 +567,6 @@ class ToolButton(QToolButton):
         x = (self.width() - w) / 2  # 计算图标水平居中位置
         self._drawIcon(self._icon, painter, QRectF(x, y, w, h))  # 绘制图标
 
-
 class TransparentToolButton(ToolButton):
     """ 透明背景工具按钮 """
     def _drawIcon(self, icon, painter, rect):
@@ -626,7 +625,6 @@ class ToggleToolButton(ToolButton):
             return ToolButton._drawIcon(self, icon, painter, rect)  # 未选中时使用普通样式
 
         PrimaryToolButton._drawIcon(self, icon, painter, rect, QIcon.On)  # 选中时使用主色调样式
-
 
 
 class TransparentToggleToolButton(ToggleToolButton):

@@ -5,15 +5,7 @@ from PyQt5.QtGui import QResizeEvent
 from PyQt5.QtWidgets import QLayout, QWidget
 
 class ExpandLayout(QLayout): 
-    """ 
-    扩展布局管理器类，继承自QLayout，用于实现垂直方向的动态布局管理。
-    特点：
-    - 所有组件在垂直方向依次排列，宽度一致（填满可用空间）
-    - 支持组件显示/隐藏状态识别，隐藏组件不占用布局空间
-    - 自动响应组件大小变化（尤其是高度变化），并调整父窗口尺寸
-    - 支持布局边距（margins）和组件间距（spacing）配置
-    适用于需要垂直排列且组件高度可能动态变化的场景，如可展开的设置面板、动态内容列表等。
-    """
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         self.__items = [] # 布局项列表：存储通过addItem添加的QLayoutItem对象
@@ -24,7 +16,7 @@ class ExpandLayout(QLayout):
             return
         
         self.__widgets.append(widget)
-        widget.installEventFilter(self)
+        widget.installEventFilter(self) # 安装事件过滤器，用于捕获组件的事件
 
     def addItem(self, item):
         self.__items.append(item)

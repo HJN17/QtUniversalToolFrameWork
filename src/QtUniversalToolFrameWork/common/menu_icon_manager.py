@@ -31,6 +31,8 @@ class MenuFunctionButtonManager(QObject):
         else:
             self._menuFunctionButtonItems[ui_key] = [button_item]
 
+    
+
     def get_menu_function_button_items(self, ui_key : str):
         return self._menuFunctionButtonItems.get(ui_key, [])
 

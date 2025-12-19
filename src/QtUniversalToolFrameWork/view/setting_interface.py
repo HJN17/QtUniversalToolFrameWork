@@ -17,7 +17,6 @@ class SettingInterface(ScrollArea):
         super().__init__(parent=parent)
         self.scrollWidget = QWidget()
         self.expandLayout = ExpandLayout(self.scrollWidget)
-
         self.settingLabel = QLabel("设置", self)
 
         # self.pathGroup = SettingCardGroup(
@@ -71,19 +70,18 @@ class SettingInterface(ScrollArea):
     def __initWidget(self):
         self.resize(1000, 800)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  # 禁用水平滚动条
-        self.setViewportMargins(0, 80, 0, 20)  # 设置视口边距：上80px，下20px（顶部留空放标题）
-        self.setWidget(self.scrollWidget)  # 设置滚动内容部件：将scrollWidget设为滚动区域的内容
-        self.setWidgetResizable(True)  # 设置内容自适应大小：允许scrollWidget随内容调整大小
+        self.setViewportMargins(0, 80, 0, 20) 
+        self.setWidget(self.scrollWidget) 
+        self.setWidgetResizable(True) 
         self.setObjectName('settingInterface')
 
-        # 初始化样式表：应用设置界面专用样式
         self.scrollWidget.setObjectName('scrollWidget')
         self.settingLabel.setObjectName('settingLabel')
         FluentStyleSheet.SETTING_INTERFACE.apply(self)
 
         self.__initLayout()
-        self.__connectSignalToSlot()
 
+        self.__connectSignalToSlot()
 
     def __initLayout(self):
         self.settingLabel.move(36, 30)

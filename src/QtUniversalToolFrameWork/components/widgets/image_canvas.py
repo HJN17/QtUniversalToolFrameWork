@@ -203,7 +203,7 @@ class ImageCanvas(QFrame):
 
         if self.original_pixmap:
 
-            self.original_w_h = QSize(self.original_pixmap.width(), self.original_pixmap.height())
+            self.original_pixmap_w_h = QSize(self.original_pixmap.width(), self.original_pixmap.height())
 
             self.init_load_image()    
             self.update_scaled_image()
@@ -331,7 +331,6 @@ class ImageCanvas(QFrame):
         if event.button() == Qt.RightButton:
             self.dragging = True
             self.last_pos = event.pos() 
-            self.setCursor(Qt.ClosedHandCursor) # 切换为拖动游标
             return
 
         super().mousePressEvent(event)
@@ -361,7 +360,6 @@ class ImageCanvas(QFrame):
         """
         if event.button() == Qt.RightButton and self.dragging :
             self.dragging = False 
-            self.setCursor(Qt.ArrowCursor)
             return
            
         super().mouseReleaseEvent(event)

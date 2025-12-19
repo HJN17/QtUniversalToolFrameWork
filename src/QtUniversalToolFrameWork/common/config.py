@@ -358,8 +358,8 @@ def isDarkThemeMode(theme=Theme.AUTO):
 
 
 
-AUTHOR = "Hu"
-VERSION = "0.1.6"
+AUTHOR = "HJN"
+VERSION = "0.1.8"
 
 qconfig = QConfig()
 qconfig.load(qconfig.filePath())

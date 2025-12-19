@@ -69,9 +69,6 @@ class NavigationPanel(QFrame):
         self.menuButton.setToolTip("打开导航")
 
 
-        
-       
-
         self.expandAni = QPropertyAnimation(self, b'geometry', self) 
         self.expandAni.setEasingCurve(QEasingCurve.OutQuad) 
         self.expandAni.setDuration(150)
@@ -104,9 +101,9 @@ class NavigationPanel(QFrame):
         self.bottomLayout.setContentsMargins(4, 0, 4, 0)
         self.scrollLayout.setContentsMargins(4, 0, 4, 0)
         self.vBoxLayout.setSpacing(4)
-        self.topLayout.setSpacing(4)
+        self.topLayout.setSpacing(8)
         self.bottomLayout.setSpacing(4)
-        self.scrollLayout.setSpacing(4)
+        self.scrollLayout.setSpacing(12)
 
         self.vBoxLayout.setAlignment(Qt.AlignTop)
         self.topLayout.setAlignment(Qt.AlignTop)
@@ -129,7 +126,7 @@ class NavigationPanel(QFrame):
 
 
     def insertItem(self, index: int, routeKey: str, icon:FluentIconBase, text: str, onClick=None,
-                                position=NavigationItemPosition.TOP, tooltip: str = None) -> NavigationPushButton:
+                                position=NavigationItemPosition.TOP, tooltip: str = None,checkable=False) -> NavigationPushButton:
         """ 插入导航树项（创建标准树形导航项并插入到指定位置）"""
 
         if routeKey in self.items.keys():
@@ -138,7 +135,7 @@ class NavigationPanel(QFrame):
 
             w = NavigationPushButton(icon, text, self)
         else:
-            w = NavigationIconButton(icon, text, self)
+            w = NavigationIconButton(icon, text,checkable, self)
 
         self._registerWidget(routeKey, w, onClick, tooltip)
 
@@ -275,7 +272,6 @@ class NavigationPanel(QFrame):
             else:
                 self._selectedPushKey = routeKey
                 item.setSelected(k == routeKey)
-    
     
 
     def isCollapsed(self):

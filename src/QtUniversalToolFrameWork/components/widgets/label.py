@@ -173,6 +173,11 @@ class CaptionLabel(FluentLabelBase):
     def getFont(self):
         return getFont(12)
 
+class CardLabel(FluentLabelBase):
+    """ 卡片文本标签 """
+
+    def getFont(self):
+        return getFont(13, 180) 
 
 class BodyLabel(FluentLabelBase):
     """ 正文文本标签 """

@@ -29,8 +29,8 @@ class NavigationWidget(QWidget):
 
         self.isCompacted = True  # 是否压缩状态
         self.isSelected = False # 是否选中状态
-        self.isPressed = False
-        self.isEnter = False 
+        self.isPressed = False # 是否按下状态
+        self.isEnter = False  # 是否鼠标进入状态
     
         self.lightTextColor = QColor(0, 0, 0)  
         self.darkTextColor = QColor(255, 255, 255) 
@@ -80,7 +80,6 @@ class NavigationWidget(QWidget):
         self.setVisible(isHidden) # 隐藏时，不占用空间 isHidden 为 True 时，不占用空间
 
     def setSelected(self, isSelected: bool):
-
         self.isSelected = isSelected 
         self.update()   
 
@@ -176,14 +175,14 @@ class NavigationPushButton(NavigationWidget):
 class NavigationIconButton(NavigationPushButton):
     """ 导航图标按钮"""
 
-    def __init__(self, icon: FIF, text: str, parent=None):
+    def __init__(self, icon: FIF, text: str, checkable=False, parent=None):
 
         super().__init__(icon, text, parent=parent)
 
         self._fadeAni = FluentAnimation.create(FluentAnimationType.FADE_IN_OUT, FluentAnimationProperty.OPACITY,speed=FluentAnimationSpeed.SLOW, value=0, parent=self)
         
-        self._reverseIcon = None
-
+        self._reverseIcon = None # 反相图标
+        self._checkable = checkable
         self.setHidden(True)   
 
     def setHidden(self, isHidden: bool):
@@ -193,13 +192,16 @@ class NavigationIconButton(NavigationPushButton):
             self._fadeAni.startAnimation(1,0)
 
     def setSelected(self, isSelected: bool):
-        if isSelected:
+        if isSelected and self._checkable:
+
             self._reverseIcon = self._icon.qicon(True)
         else:
             self._reverseIcon = self._icon
 
         super().setSelected(isSelected)
-        
+    
+    def _canDrawIndicator(self):
+        return self.isSelected and self._checkable
 
     def paintEvent(self, e):
         """ 绘制按钮界面 """
@@ -213,17 +215,16 @@ class NavigationIconButton(NavigationPushButton):
         m = self._margins()  
         pl, pr = m.left(), m.right() 
 
-        globalRect = QRect(self.mapToGlobal(QPoint()), self.size())  # 按钮全局矩形区域
-
+        x,y,w,h = self.rect().getRect()
         if self._canDrawIndicator():
             painter.setBrush(themeColor()) 
-            painter.drawRoundedRect(self.rect(), 5, 5) 
+            painter.drawRoundedRect(x+2, y+2, w-4, h-4, 5, 5) # 参数意思 
 
-        elif self.isEnter and self.isEnabled() and globalRect.contains(QCursor.pos()): # 鼠标悬停在按钮上
+        elif self.isPressed and self.isEnabled(): # 按钮被按下
             painter.setBrush(QColor(c, c, c, 10))
-            painter.drawRoundedRect(self.rect(), 5, 5)
+            painter.drawRoundedRect(x+2, y+2, w-4, h-4, 5, 5) # 参数意思 
 
-        drawIcon(self._reverseIcon, painter, QRectF(11.5+pl, 10, 16, 16))
+        drawIcon(self._reverseIcon, painter, QRectF(9.5+pl, 8, 20, 20)) # 参数意思：图标，画家，图标矩形区域 QRectF(左, 上, 宽, 高)
 
         if self.isCompacted:
             return 
@@ -271,7 +272,9 @@ class NavigationSeparator(NavigationWidget):
         """ 绘制分隔符 """
         painter = QPainter(self)
         c = 255 if isDarkTheme() else 0 
-        pen = QPen(QColor(c, c, c, 15))
+        pen = QPen(QColor(c, c, c, 60))
         pen.setCosmetic(True) 
         painter.setPen(pen)
         painter.drawLine(1, 1, self.width()-2, 1)  # 绘制分隔线
+
+

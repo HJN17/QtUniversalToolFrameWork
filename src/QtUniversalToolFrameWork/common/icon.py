@@ -4,7 +4,7 @@ from typing import Union
 import json 
 
 from PyQt5.QtXml import QDomDocument
-from PyQt5.QtCore import QRectF, Qt, QFile, QObject, QRect
+from PyQt5.QtCore import QRectF, Qt, QFile, QObject, QRect, QSize
 from PyQt5.QtGui import (QIcon, QIconEngine, QColor, QPixmap, QImage, QPainter,QFontDatabase, QFont, QPainterPath)
 from PyQt5.QtWidgets import QAction, QApplication
 from PyQt5.QtSvg import QSvgRenderer
@@ -407,36 +407,42 @@ class Action(QAction):
         """ 多构造函数：无文本无图标 """
         super().__init__(parent, **kwargs)
         self.fluentIcon = None 
+        self.size = QSize(16, 16)
 
     @__init__.register
     def _(self, text: str, parent: QObject = None, **kwargs):
         """ 多构造函数：带文本 """
         super().__init__(text, parent, **kwargs)
         self.fluentIcon = None
+        self.size = QSize(16, 16)
 
     @__init__.register
     def _(self, icon: QIcon, text: str, parent: QObject = None, **kwargs):
         """ 多构造函数：带QIcon和文本 """
         super().__init__(icon, text, parent, **kwargs)
         self.fluentIcon = None
+        self.size = QSize(16, 16)
 
     @__init__.register
     def _(self, icon: FluentIconBase, text: str, parent: QObject = None, **kwargs):
         """ 多构造函数：带Fluent图标和文本 """
         super().__init__(icon.icon(), text, parent, **kwargs)
         self.fluentIcon = icon
+        self.size = QSize(16, 16)
 
     @__init__.register
     def _(self, icon: QIcon, parent: QObject = None, **kwargs):
         """ 多构造函数：带QIcon """
         super().__init__(icon, parent, **kwargs)
         self.fluentIcon = None
+        self.size = QSize(16, 16)
 
     @__init__.register
     def _(self, icon: FluentIconBase, parent: QObject = None, **kwargs):
         """ 多构造函数：带Fluent图标 """
         super().__init__(icon.icon(), parent, **kwargs) 
         self.fluentIcon = icon 
+        self.size = QSize(16, 16)
 
 
     def icon(self) -> QIcon:
@@ -451,3 +457,11 @@ class Action(QAction):
             self.fluentIcon = icon
             icon = icon.icon() 
         super().setIcon(icon) 
+    
+    def get_size(self) -> QSize:
+        """ 获取图标大小 """
+        return self.size
+    
+    def set_size(self, size: QSize):
+        """ 设置图标大小 """
+        self.size = size

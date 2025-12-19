@@ -1,6 +1,6 @@
 [project]
 name = "QtUniversalToolFrameWork"
-version = "0.1.7"
+version = "0.2.2"
 description = "qt通用工具框架是一个基于python的qt框架,用于快速开发qt应用程序"
 readme = "README.md"
 authors = [
