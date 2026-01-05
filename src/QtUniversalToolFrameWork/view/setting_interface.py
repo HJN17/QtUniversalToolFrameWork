@@ -15,6 +15,7 @@ class SettingInterface(ScrollArea):
     """ 设置界面 """
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+
         self.scrollWidget = QWidget()
         self.expandLayout = ExpandLayout(self.scrollWidget)
         self.settingLabel = QLabel("设置", self)
@@ -70,9 +71,9 @@ class SettingInterface(ScrollArea):
     def __initWidget(self):
         self.resize(1000, 800)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  # 禁用水平滚动条
-        self.setViewportMargins(0, 80, 0, 20) 
+        self.setViewportMargins(0, 80, 0, 20) # 上、左、右、下
         self.setWidget(self.scrollWidget) 
-        self.setWidgetResizable(True) 
+        self.setWidgetResizable(True) # 使滚动区域可调整大小
         self.setObjectName('settingInterface')
 
         self.scrollWidget.setObjectName('scrollWidget')

@@ -1,14 +1,14 @@
 # coding:utf-8
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtCore import pyqtSignal,QObject,pyqtSlot
+from PyQt5.QtCore import pyqtSignal,pyqtSlot
 import os
 from enum import Enum
 import threading
 from typing import List
 from PyQt5.QtCore import pyqtSignal,QThread
 from natsort import natsorted
-from collections import OrderedDict 
 from .abstract import AbstractViewer
+from .cache import LRUCache
 
 class ImageExtension(Enum):
     PNG = ".png"
@@ -42,37 +42,7 @@ def get_image_paths(dir_path: str) -> List[str]:
 
     return image_filenames
 
-class LRUCache:
-    """
-    LRU缓存实现类，用于缓存最近使用的图片。
-    当缓存满时，会移除最近最少使用的项。
-    """
-    def __init__(self, capacity: int = 300):
-        self.cache = OrderedDict()
-        self.capacity = capacity
 
-    def get(self, key: str):
-
-        if key not in self.cache:
-            return None
-        
-        self.cache.move_to_end(key)
-
-        return self.cache[key]
-
-    def put(self, key: str, value: QPixmap): 
-        if key in self.cache:
-            self.cache.move_to_end(key)
-        self.cache[key] = value
-        if len(self.cache) > self.capacity:
-            self.cache.popitem(last=False)
-    
-    def delete(self, key: str):
-        if key in self.cache:
-            del self.cache[key]
-
-    def clear(self):
-        self.cache.clear()
 
 class PreloadWorker(QThread):
     """
@@ -129,6 +99,18 @@ class ImageManager(AbstractViewer):
         self.current_item_changed.connect(self._get_current_image)
         self.current_item_changed.connect(self._preload_next_batch)
         
+
+
+    def get_image_name_by_index(self,index:int) -> str:
+        if index < 0 or index >= self.count:
+            return ""
+        return os.path.basename(self.items[index]).split(".")[0]
+    
+    def get_image_name_by_current_index(self) -> str:
+        return self.get_image_name_by_index(self.current_index)
+
+    
+
     def set_items(self, items):
         super().set_items(items)
         self._pixmap_cache.clear()
@@ -138,6 +120,8 @@ class ImageManager(AbstractViewer):
         super().delete_current()
         self._pixmap_cache.delete(self.current_item)
     
+
+
     def _get_current_image(self) -> QPixmap:
         if not self.items or self.current_index == -1:
             return None

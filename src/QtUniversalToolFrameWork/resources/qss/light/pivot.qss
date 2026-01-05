@@ -8,11 +8,12 @@ PivotItem {
     margin: 3px 0px;
 }
 
-Pivot {
-    background-color:red;
+SegmentedWidget{
+    background-color: rgba(0, 0, 0, 0.0241);
     border: 1px solid rgba(0, 0, 0, 0.0578);
     border-radius: 6px;
 }
+
 
 PivotItem[isSelected=false]:hover{
     background-color: rgba(0, 0, 0, 7);
@@ -28,3 +29,5 @@ PivotItem[isSelected=true]{
     margin: 0px;
     background-color: transparent;
 }
+
+

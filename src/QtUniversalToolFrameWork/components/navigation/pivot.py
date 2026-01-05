@@ -24,7 +24,7 @@ class PivotItem(PushButton):
         self.isSelected = False
         self.setProperty('isSelected', False)
         self.clicked.connect(lambda: self.itemClicked.emit(True))
-        self.setAttribute(Qt.WA_LayoutUsesWidgetRect)
+        self.setAttribute(Qt.WA_LayoutUsesWidgetRect) # 使布局使用小部件的矩形而不是其内容矩形
 
         FluentStyleSheet.PIVOT.apply(self)
         setFont(self, 14)
@@ -57,7 +57,7 @@ class Pivot(QWidget):
         self.hBoxLayout.setAlignment(Qt.AlignLeft)
         self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.hBoxLayout.setSizeConstraint(QHBoxLayout.SetMinimumSize)
-
+        
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
 
     def addItem(self, routeKey: str, text: str, onClick=None, icon=None):
@@ -72,6 +72,7 @@ class Pivot(QWidget):
             item.setIcon(icon)
 
         self.insertWidget(index, routeKey, item, onClick)
+        
         return item
 
     def insertWidget(self, index: int, routeKey: str, widget: PivotItem, onClick=None):
@@ -85,7 +86,7 @@ class Pivot(QWidget):
             widget.itemClicked.connect(onClick)
 
         self.items[routeKey] = widget
-        self.hBoxLayout.insertWidget(index, widget, 1)
+        self.hBoxLayout.insertWidget(index, widget, 1) # 插入到指定索引位置，权重为1
 
     def currentItem(self):
         if self._currentRouteKey is None:
@@ -161,6 +162,11 @@ class Pivot(QWidget):
         painter.drawRoundedRect(QRectF(x, self.height() - 3.5, 16, 3), 1.5, 1.5)
 
 
+class SegmentedWidget(Pivot):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setAttribute(Qt.WA_StyledBackground)
 
 
 
