@@ -168,7 +168,7 @@ class ImageProgressWidget(QWidget):
 class ImageCanvas(QFrame):
 
     MIN_SCALE = 0.1
-    MAX_SCALE = 9.0
+    MAX_SCALE = 5.0
     ZOOM_IN_FACTOR = 1.2 
     ZOOM_OUT_FACTOR = 0.8 
     WHEEL_ZOOM_FACTOR = 1.2 

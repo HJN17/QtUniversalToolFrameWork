@@ -10,7 +10,7 @@ QDialog {
     border-bottom: none;
 }
 
-MessageBoxBase #buttonGroup,
+CustomMessageBoxBase #buttonGroup,
 MessageBox #buttonGroup {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;

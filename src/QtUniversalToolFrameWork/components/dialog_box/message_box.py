@@ -26,7 +26,7 @@ class CustomMessageBoxBase(MaskDialogBase):
         self.buttonGroup = QFrame(self.widget)  # 创建按钮组框架
         self.yesButton = PrimaryPushButton('确定', self.buttonGroup)  # 创建确认按钮
         self.cancelButton = QPushButton('取消', self.buttonGroup)  # 创建取消按钮
-
+    
         self.vBoxLayout = QVBoxLayout(self.widget)
         self.viewLayout = QVBoxLayout()
         self.buttonLayout = QHBoxLayout(self.buttonGroup)

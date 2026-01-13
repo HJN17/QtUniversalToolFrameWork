@@ -20,16 +20,8 @@ class MainWindow(FluentWindow):
 
         self.initWindow()
 
-    
         self.themeListener = SystemThemeListener(self)
-
-        self.homeInterface = HomeInterface(self)
-        # self.homeInterface1 = HomeInterface1(self)
-        # self.homeInterface2 = HomeInterface2(self)
-
-        self.settingInterface = SettingInterface(self)
-        
-
+    
         self.initNavigation()
 
         self.splashScreen = SplashScreen(self.windowIcon(), self)
@@ -47,6 +39,14 @@ class MainWindow(FluentWindow):
 
     def initNavigation(self):
         """ 初始化导航栏，添加导航项和分隔符 """
+
+        
+
+        self.homeInterface = HomeInterface(self)
+        # self.homeInterface1 = HomeInterface1(self)
+        # self.homeInterface2 = HomeInterface2(self)
+
+        self.settingInterface = SettingInterface(self)
 
         # self.addScrollItem(self.homeInterface,self.homeInterface1,FIF.BUS, '功能1',checkable=True)
         # self.addScrollItem(self.homeInterface,self.homeInterface2,FIF.CAFE, '功能2')

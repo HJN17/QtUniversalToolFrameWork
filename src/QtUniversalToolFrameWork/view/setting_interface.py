@@ -66,9 +66,9 @@ class SettingInterface(ScrollArea):
             self.aboutGroup 
         )
 
-        self.__initWidget()
+        self._initWidget()
 
-    def __initWidget(self):
+    def _initWidget(self):
         self.resize(1000, 800)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  # 禁用水平滚动条
         self.setViewportMargins(0, 80, 0, 20) # 上、左、右、下
@@ -80,11 +80,11 @@ class SettingInterface(ScrollArea):
         self.settingLabel.setObjectName('settingLabel')
         FluentStyleSheet.SETTING_INTERFACE.apply(self)
 
-        self.__initLayout()
+        self._initLayout()
 
-        self.__connectSignalToSlot()
+        self._connectSignalToSlot()
 
-    def __initLayout(self):
+    def _initLayout(self):
         self.settingLabel.move(36, 30)
 
         # 将卡片添加到对应设置组
@@ -101,7 +101,7 @@ class SettingInterface(ScrollArea):
         self.expandLayout.addWidget(self.personalGroup)
         self.expandLayout.addWidget(self.aboutGroup)
 
-    def __showRestartTooltip(self):
+    def _showRestartTooltip(self):
         """ 显示配置更新提示：告知用户配置需重启后生效 """
         InfoBar.success(
             '更新成功',
@@ -111,7 +111,7 @@ class SettingInterface(ScrollArea):
         )
 
     
-    def __onDownloadFolderCardClicked(self):
+    def _onDownloadFolderCardClicked(self):
         """ 下载文件夹卡片点击事件槽函数：处理文件夹选择逻辑 """
         folder = QFileDialog.getExistingDirectory(
             self, "选择文件夹", qconfig.get(qconfig.downloadFolder) or  "./" )
@@ -122,9 +122,9 @@ class SettingInterface(ScrollArea):
         self.downloadFolderCard.setContent(folder)  # 更新卡片内容：显示新路径
 
     # 连接信号与槽：绑定UI事件到对应处理函数
-    def __connectSignalToSlot(self):
+    def _connectSignalToSlot(self):
         """ 连接信号与槽函数：建立UI交互与业务逻辑的关联 """
-        qconfig.appRestartSig.connect(self.__showRestartTooltip)  # 配置重启信号连接提示函数
+        qconfig.appRestartSig.connect(self._showRestartTooltip)  # 配置重启信号连接提示函数
 
         # self.downloadFolderCard.clicked.connect(  
         #     self.__onDownloadFolderCardClicked)

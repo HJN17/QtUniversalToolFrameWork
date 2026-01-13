@@ -267,6 +267,106 @@ class HyperlinkButton(PushButton):
     url = pyqtProperty(QUrl, getUrl, setUrl)  # 定义Qt属性，允许在Qt设计器中编辑URL
 
 
+
+class ColorButton(PushButton):
+    """ 颜色选择按钮 """
+
+    @singledispatchmethod 
+    def __init__(self, color: QColor , parent: QWidget = None, ):
+        super().__init__(parent) 
+        self._color = color
+        self.isHover = False  
+
+        self.setMinimumWidth(100)
+        FluentStyleSheet.BUTTON.apply(self)  
+        self.setAttribute(Qt.WA_MacShowFocusRect, False) 
+        self._postInit()
+
+    @__init__.register  
+    def _(self, text: str, color: QColor, parent: QWidget = None):
+        self.__init__(color,parent)  
+        self.setText(text) 
+
+    def enterEvent(self, e):
+        self.isHover = True  
+        self.update() 
+
+    def leaveEvent(self, e):
+        self.isHover = False 
+        self.update() 
+
+    def paintEvent(self, e):
+        """ 处理重绘事件，绘制单选按钮指示器和文本 """
+        painter = QPainter(self)  # 创建绘图对象
+        painter.setRenderHints(QPainter.Antialiasing | QPainter.TextAntialiasing)  # 设置抗锯齿
+        self._drawIndicator(painter)
+        self._drawText(painter)  # 绘制文本
+
+    def _drawText(self, painter: QPainter):
+        """ 绘制按钮文本
+        painter: QPainter绘图对象
+        """
+        if not self.isEnabled():  # 如果按钮被禁用，设置透明度
+            painter.setOpacity(0.36)
+
+        painter.setFont(getFont(fontSize=15))  # 设置字体
+        painter.setPen(self.textColor())  # 设置文本颜色
+        # 绘制文本，左对齐，垂直居中
+        painter.drawText(QRect(34, 0, self.width(), self.height()), Qt.AlignVCenter, self.text())
+
+    def _drawIndicator(self, painter: QPainter):
+        
+        filledColor = Qt.black if isDarkTheme() else Qt.white
+        
+        indicatorPos = QPoint(10, self.rect().height() // 2+1)
+
+        if self.isHover and not self.isDown():
+            self._drawCircle(painter, indicatorPos, 8, 4, self._color, filledColor)
+        else:
+            self._drawCircle(painter, indicatorPos, 8, 5, self._color, filledColor)
+
+    def _drawCircle(self, painter: QPainter, center: QPoint, radius, thickness, borderColor, filledColor):
+        """ 绘制圆形的辅助方法
+        painter: QPainter绘图对象
+        center: 圆心坐标
+        radius: 圆的半径
+        thickness: 边框厚度
+        borderColor: 边框颜色
+        filledColor: 填充颜色
+        """
+        path = QPainterPath()  # 创建绘制路径
+        path.setFillRule(Qt.FillRule.WindingFill)  # 设置填充规则
+
+        # 绘制外圆（边框）
+        outerRect = QRectF(center.x() - radius, center.y() - radius, 2 * radius, 2 * radius)
+        path.addEllipse(outerRect)  # 添加椭圆到路径
+
+        # 绘制内部中心（填充区域）
+        ir = radius - thickness  # 内圆半径
+        innerRect = QRectF(center.x() - ir, center.y() - ir, 2 * ir, 2 * ir)  # 内圆矩形
+        innerPath = QPainterPath()  # 创建内圆路径
+        innerPath.addEllipse(innerRect)  # 添加内圆到路径
+
+        path = path.subtracted(innerPath)  # 从外圆路径中减去内圆路径，得到环形区域
+
+        # 绘制外圆环
+        painter.setPen(Qt.NoPen)  # 不使用边框
+        painter.fillPath(path, borderColor)  # 填充环形区域
+
+        # 填充内部圆
+        painter.fillPath(innerPath, filledColor)  # 填充内部圆形区域
+
+    def textColor(self):
+        """ 根据当前主题返回文本颜色 """
+        return QColor(255, 255, 255) if isDarkTheme() else QColor(0, 0, 0)
+    def getColor(self):
+        return self._color
+
+    def setColor(self, color: QColor):
+        self._color = color
+        self.update()
+
+    color = pyqtProperty(QColor, getColor, setColor) # 定义Qt属性，允许在Qt设计器中编辑颜色
 class RadioButton(QRadioButton):
     """ 单选按钮
 

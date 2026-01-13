@@ -252,6 +252,8 @@ class QConfig(QObject):
         set = QSettings(QSettings.IniFormat, QSettings.UserScope, AUTHOR, "QtUniversalToolFrameWork") # 配置文件路径
         set_dir = QFileInfo(set.fileName()).absolutePath()  # 提取目录路径
         
+        print(f"\n📍 配置文件存储路径: \033[32m{set_dir}\033[0m")
+
         if not set.contains("Config"):
             set.setValue("Config", "config.json") 
 
@@ -289,15 +291,23 @@ class QConfig(QObject):
     
         items = {}
     
-        for name in dir(self.__class__):
-            item = getattr(self.__class__, name)
+
+        all_attr_names = set(dir(self.__class__)) | set(dir(self))
+
+        for name in all_attr_names: # 遍历类的所有属性
+            try:
+                item = getattr(self, name)
+            except AttributeError:
+            # 若实例无该属性，再从类获取
+                item = getattr(self.__class__, name)
+        
             if not isinstance(item, ConfigItem):
                 continue
 
             value = item.serialize() if serialize else item.value
-          
-            if not items.get(item.group): # 若group不存在，创建
-                if not item.name: # 若配置项无name，直接存储在group下
+        
+            if not items.get(item.group):  # 若group不存在，创建
+                if not item.name:  # 若配置项无name，直接存储在group下
                     items[item.group] = value
                 else: 
                     items[item.group] = {}
@@ -327,12 +337,17 @@ class QConfig(QObject):
 
         # 构建配置项键与实例的映射（键格式："group.name"）
         items = {}
-        for name in dir(self.__class__):
-            item = getattr(self.__class__, name) 
+        all_attr_names = set(dir(self.__class__)) | set(dir(self))
+        for name in all_attr_names:
+            
+            try:
+                item = getattr(self, name)
+            except AttributeError:
+                item = getattr(self.__class__, name)
+                
             if isinstance(item, ConfigItem):
                 items[item.key] = item 
 
-        # 遍历JSON数据，更新配置项值
         for k, v in cfg.items():
             if not isinstance(v, dict) and items.get(k) is not None:
                 items[k].deserializeFrom(v)
@@ -362,7 +377,7 @@ AUTHOR = "HJN"
 VERSION = "0.1.8"
 
 qconfig = QConfig()
-qconfig.load(qconfig.filePath())
+
 
 
 

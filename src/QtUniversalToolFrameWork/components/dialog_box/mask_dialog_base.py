@@ -56,7 +56,7 @@ class MaskDialogBase(QDialog):
         opacityAni = QPropertyAnimation(opacityEffect, b'opacity', self)    # 创建透明度动画
         opacityAni.setStartValue(0) # 设置动画起始透明度
         opacityAni.setEndValue(1)   # 设置动画结束透明度
-        opacityAni.setDuration(500) # 设置动画持续时间
+        opacityAni.setDuration(200) # 设置动画持续时间
         opacityAni.setEasingCurve(QEasingCurve.InSine)  # 设置动画缓动曲线
         opacityAni.finished.connect(lambda: self.setGraphicsEffect(None))   # 动画完成后移除图形效果
         opacityAni.start()  # 开始动画
@@ -74,7 +74,7 @@ class MaskDialogBase(QDialog):
         
         opacityAni.setStartValue(1) # 设置动画起始透明度
         opacityAni.setEndValue(0) # 设置动画结束透明度
-        opacityAni.setDuration(500) # 设置动画持续时间
+        opacityAni.setDuration(200) # 设置动画持续时间
         opacityAni.finished.connect(lambda: self._onDone(code)) # 动画完成后调用_onDone方法
         opacityAni.start()
 

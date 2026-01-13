@@ -7,6 +7,9 @@ from PyQt5.QtWidgets import QApplication
 from .common.config import qconfig  # 从应用公共配置模块导入cfg（配置管理对象）
 from .view.main_window import MainWindow
 
+
+qconfig.load(qconfig.filePath())
+
 if qconfig.get(qconfig.dpiScale) == "Auto":
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)

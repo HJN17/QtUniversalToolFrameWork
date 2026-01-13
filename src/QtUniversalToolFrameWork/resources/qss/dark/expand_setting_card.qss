@@ -1,4 +1,4 @@
-ExpandSettingCard {
+ExpandSettingCard,FlowSettingCard {
     border: 1px solid transparent;
     border-radius: 6px;
     background-color: transparent;
