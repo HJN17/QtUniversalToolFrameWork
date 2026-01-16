@@ -175,6 +175,9 @@ class ImageCanvas(QFrame):
     ROTATE_ANGLE = 90
     RESIZE_THRESHOLD = 5 
 
+
+    scaleSignal = pyqtSignal(float)
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
@@ -182,7 +185,7 @@ class ImageCanvas(QFrame):
         self.original_pixmap  = None
         self._scaled_pixmap = None 
 
-        self.scale = 1.0 
+        self._scale = 1.0 
 
         self.offset = QPoint(0, 0)
         self.dragging = False 
@@ -195,6 +198,16 @@ class ImageCanvas(QFrame):
         self.setFocusPolicy(Qt.StrongFocus)
         self._scale_label  = ScaleLabel(self)
 
+        self.scaleSignal.connect(self._scale_label.show_scale)
+
+    @property
+    def scale(self):
+        return self._scale
+    
+    @scale.setter
+    def scale(self, value: float):
+        self._scale = value
+        self.scaleSignal.emit(value)
 
     def load_pixmap(self, pixmap: QPixmap):
 
@@ -277,7 +290,7 @@ class ImageCanvas(QFrame):
 
         self.update_scaled_image()
         self.update()
-        self._scale_label.show_scale(self.scale)
+        
 
 
     def zoom_to(self, scale_factor: float):

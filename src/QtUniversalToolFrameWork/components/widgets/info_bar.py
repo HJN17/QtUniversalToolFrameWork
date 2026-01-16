@@ -117,80 +117,71 @@ class InfoBar(QFrame):
             parent: 父部件，信息栏将显示在该部件内
         """
         super().__init__(parent=parent)
-        self.title = title                # 保存标题文本
-        self.content = content            # 保存内容文本
-        self.orient = orient              # 保存布局方向
-        self.icon = icon                  # 保存图标
-        self.duration = duration          # 保存显示时长
-        self.isClosable = isClosable      # 保存是否可关闭状态
-        self.position = position          # 保存显示位置
+        self.title = title           
+        self.content = content          
+        self.orient = orient            
+        self.icon = icon              
+        self.duration = duration        
+        self.isClosable = isClosable    
+        self.position = position     
 
-        self.titleLabel = QLabel(self)    # 标题标签部件
-        self.contentLabel = QLabel(self)  # 内容标签部件
-        # 关闭按钮（使用透明工具按钮，图标为关闭图标）
+        self.titleLabel = QLabel(self)  
+        self.contentLabel = QLabel(self) 
         self.closeButton = TransparentToolButton(FIF.CLOSE, self)
-        self.iconWidget = InfoIconWidget(icon)  # 图标部件（使用自定义InfoIconWidget）
+        self.iconWidget = InfoIconWidget(icon) 
 
-        self.hBoxLayout = QHBoxLayout(self)          # 主水平布局
-        # 文本布局：水平布局（水平方向时）或垂直布局（垂直方向时）
+        self.hBoxLayout = QHBoxLayout(self)   
         self.textLayout = QHBoxLayout() if self.orient == Qt.Horizontal else QVBoxLayout()
-        # 部件布局：水平布局（水平方向时）或垂直布局（垂直方向时）
         self.widgetLayout = QHBoxLayout() if self.orient == Qt.Horizontal else QVBoxLayout()
 
         self.opacityEffect = QGraphicsOpacityEffect(self)  # 透明度效果对象
-        # 透明度动画：控制透明度效果的opacity属性
         self.opacityAni = QPropertyAnimation(self.opacityEffect, b'opacity', self)
 
-        self.lightBackgroundColor = None  # 浅色主题背景色（自定义时使用）
-        self.darkBackgroundColor = None   # 深色主题背景色（自定义时使用）
+        self.lightBackgroundColor = None  
+        self.darkBackgroundColor = None 
 
         self.__initWidget()  # 初始化界面部件
 
     def __initWidget(self):
         """ 初始化界面部件（设置透明度、按钮样式、布局等） """
-        self.opacityEffect.setOpacity(1)  # 设置初始透明度为1（完全不透明）
+        self.opacityEffect.setOpacity(1) 
         self.setGraphicsEffect(self.opacityEffect)  # 为部件应用透明度效果
 
-        self.closeButton.setFixedSize(36, 36)       # 设置关闭按钮大小为36x36像素
-        self.closeButton.setIconSize(QSize(12, 12))  # 设置关闭按钮图标大小为12x12像素
-        self.closeButton.setCursor(Qt.PointingHandCursor)  # 设置鼠标悬停为手型光标
-        self.closeButton.setVisible(self.isClosable)  # 根据isClosable显示/隐藏关闭按钮
+        self.closeButton.setFixedSize(36, 36)   
+        self.closeButton.setIconSize(QSize(12, 12)) 
+        self.closeButton.setCursor(Qt.PointingHandCursor)
+        self.closeButton.setVisible(self.isClosable) 
 
-        self.__setQss()    # 设置样式表
-        self.__initLayout()  # 初始化布局
+        self.__setQss()  
+        self.__initLayout() 
 
-        self.closeButton.clicked.connect(self.close)  # 关闭按钮点击信号连接到close方法
+        self.closeButton.clicked.connect(self.close)  
 
     def __initLayout(self):
         """ 初始化布局（设置边距、间距、添加部件到布局） """
-        self.hBoxLayout.setContentsMargins(6, 6, 6, 6)  # 设置主布局外边距（上、右、下、左）
-        self.hBoxLayout.setSizeConstraint(QVBoxLayout.SetMinimumSize)  # 主布局大小约束：最小尺寸
-        self.textLayout.setSizeConstraint(QHBoxLayout.SetMinimumSize)  # 文本布局大小约束：最小尺寸
-        self.textLayout.setAlignment(Qt.AlignTop)  # 文本布局内控件顶部对齐
-        self.textLayout.setContentsMargins(1, 8, 0, 8)  # 文本布局内边距
+        self.hBoxLayout.setContentsMargins(6, 6, 6, 6) 
+        self.hBoxLayout.setSizeConstraint(QVBoxLayout.SetMinimumSize) 
+        self.textLayout.setSizeConstraint(QHBoxLayout.SetMinimumSize) 
+        self.textLayout.setAlignment(Qt.AlignTop) 
+        self.textLayout.setContentsMargins(1, 8, 0, 8) 
 
-        self.hBoxLayout.setSpacing(0)  # 主布局控件间距为0
-        self.textLayout.setSpacing(5)  # 文本布局控件间距为5
+        self.hBoxLayout.setSpacing(0) 
+        self.textLayout.setSpacing(5)  
 
-        # 添加图标部件到主布局（顶部左对齐）
         self.hBoxLayout.addWidget(self.iconWidget, 0, Qt.AlignTop | Qt.AlignLeft)
 
-        # 添加标题标签到文本布局（顶部对齐，占1份空间）
         self.textLayout.addWidget(self.titleLabel, 1, Qt.AlignTop)
-        self.titleLabel.setVisible(bool(self.title))  # 标题为空时隐藏标签
+        self.titleLabel.setVisible(bool(self.title))
 
-        # 水平布局时，标题和内容间添加7像素间距
         if self.orient == Qt.Horizontal:
             self.textLayout.addSpacing(7)
 
-        # 添加内容标签到文本布局（顶部对齐，占1份空间）
         self.textLayout.addWidget(self.contentLabel, 1, Qt.AlignTop)
-        self.contentLabel.setVisible(bool(self.content))  # 内容为空时隐藏标签
-        self.hBoxLayout.addLayout(self.textLayout)  # 将文本布局添加到主布局
+        self.contentLabel.setVisible(bool(self.content)) 
+        self.hBoxLayout.addLayout(self.textLayout) 
 
-        # 添加部件布局（用于添加自定义控件）
         if self.orient == Qt.Horizontal:
-            self.hBoxLayout.addLayout(self.widgetLayout)  # 水平布局时添加到主布局
+            self.hBoxLayout.addLayout(self.widgetLayout) 
             self.widgetLayout.setSpacing(10)  # 部件布局间距为10
         else:
             self.textLayout.addLayout(self.widgetLayout)  # 垂直布局时添加到文本布局
@@ -221,18 +212,14 @@ class InfoBar(QFrame):
 
     def _adjustText(self):
         """ 调整文本显示（自动换行，限制最大宽度） """
-        # 计算最大宽度：父部件存在时为父部件宽度-50，否则为900像素
         w = 900 if not self.parent() else (self.parent().width() - 50)
 
-        # 调整标题文本：根据宽度计算最大字符数（10像素/字符，限制30-120字符）
         chars = max(min(w / 10, 120), 30)
-        # 使用TextWrap工具换行，取第一行（超出部分省略）
         self.titleLabel.setText(TextWrap.wrap(self.title, chars, False)[0])
 
-        # 调整内容文本：根据宽度计算最大字符数（9像素/字符，限制30-120字符）
         chars = max(min(w / 9, 120), 30)
         self.contentLabel.setText(TextWrap.wrap(self.content, chars, False)[0])
-        self.adjustSize()  # 调整部件大小以适应文本
+        self.adjustSize() 
 
     def addWidget(self, widget: QWidget, stretch=0):
         """
@@ -313,44 +300,30 @@ class InfoBar(QFrame):
             self.parent().installEventFilter(self)
 
     def paintEvent(self, e):
-        """
-        绘制事件（自定义背景色时绘制背景）
-        
-        参数:
-            e: 绘制事件对象
-        """
-        super().paintEvent(e)  # 调用父类绘制（绘制框架等）
+
+        super().paintEvent(e) 
+
         if self.lightBackgroundColor is None:
-            return  # 未设置自定义背景色时不绘制
+            return 
 
-        painter = QPainter(self)  # 创建画家对象
-        painter.setRenderHints(QPainter.Antialiasing)  # 启用抗锯齿
-        painter.setPen(Qt.NoPen)  # 不绘制边框
+        painter = QPainter(self) 
+        painter.setRenderHints(QPainter.Antialiasing)  
+        painter.setPen(Qt.NoPen)
 
-        # 根据当前主题选择背景色
         if isDarkTheme():
             painter.setBrush(self.darkBackgroundColor)
         else:
             painter.setBrush(self.lightBackgroundColor)
 
-        # 绘制圆角矩形背景（调整矩形大小，留出1像素边框空间）
         rect = self.rect().adjusted(1, 1, -1, -1)
-        painter.drawRoundedRect(rect, 6, 6)  # 圆角半径6像素
+        painter.drawRoundedRect(rect, 6, 6) 
 
     @classmethod
     def new(cls, icon, title, content, orient=Qt.Horizontal, isClosable=True, duration=1000,
             position=InfoBarPosition.TOP_RIGHT, parent=None):
-        """
-        创建信息栏实例并显示（工厂方法）
-        
-        参数:
-            同__init__方法
-            
-        返回:
-            InfoBar: 创建的信息栏实例
-        """
+       
         w = InfoBar(icon, title, content, orient, isClosable, duration, position, parent)
-        w.show()  # 显示信息栏
+        w.show()  
         return w
 
     @classmethod

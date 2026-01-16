@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabe
 from ...common.style_sheet import FluentStyleSheet, setShadowEffect  # 导入样式表
 from ...common.auto_wrap import TextWrap  # 导入文本自动换行工具
 from ..widgets.button import PrimaryPushButton  # 导入主要按钮组件
-from ..widgets.label import BodyLabel,CaptionLabel  # 导入标签组件
+from ..widgets.label import MessageBodyLabel,CaptionLabel  # 导入标签组件
 from .mask_dialog_base import MaskDialogBase  # 导入带遮罩的对话框基类
 
 from ..widgets.line_edit import LineEdit  # 导入行编辑组件
@@ -192,13 +192,13 @@ class MessageBox(MaskDialogBase):
         self._hBoxLayout.addWidget(self.widget, 1, Qt.AlignCenter)
 
         # 设置按钮组最小宽度
-        self.buttonGroup.setMinimumWidth(280)
+        self.buttonGroup.setMinimumWidth(380)
         # 设置中心部件固定大小
         self.widget.setFixedSize(
             # 宽度为内容标签和标题标签宽度的较大值加48
-            max(self.contentLabel.width(), self.titleLabel.width()) + 48,
+            max(self.bodyLabel.width(), self.titleLabel.width()) + 48,
             # 高度为内容标签的y坐标加内容标签高度加105
-            self.contentLabel.y() + self.contentLabel.height() + 105
+            self.bodyLabel.y() + self.bodyLabel.height() + 105
         )
 
 
@@ -213,8 +213,7 @@ class MessageBox(MaskDialogBase):
         """
         self.content = content  # 保存内容文本
         self.titleLabel = QLabel(title, parent)  # 创建标题标签
-        self.contentLabel = BodyLabel(content, parent)  # 创建内容标签
-
+        self.bodyLabel = MessageBodyLabel(content, parent)  # 创建内容标签
         self.buttonGroup = QFrame(parent)  # 创建按钮组框架
         self.yesButton = PrimaryPushButton("确定", self.buttonGroup)  # 创建确认按钮
         self.cancelButton = QPushButton("取消", self.buttonGroup)  # 创建取消按钮
@@ -240,7 +239,7 @@ class MessageBox(MaskDialogBase):
         self.buttonGroup.setFixedHeight(81)
 
         # 设置内容标签的右键菜单策略为自定义
-        self.contentLabel.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.bodyLabel.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         # 调整文本显示
         self._adjustText()
 
@@ -264,7 +263,7 @@ class MessageBox(MaskDialogBase):
             # 根据宽度计算每行显示的字符数，限制在30-100之间
             chars = max(min(w / 9, 100), 30)
 
-        self.contentLabel.setText(TextWrap.wrap(self.content, chars, False)[0]) # 自动换行处理文本
+        self.bodyLabel.setText(TextWrap.wrap(self.content, chars, False)[0]) # 自动换行处理文本
 
     def __initLayout(self):
         """ 初始化布局 """
@@ -282,7 +281,7 @@ class MessageBox(MaskDialogBase):
         self.textLayout.setContentsMargins(24, 24, 24, 24)
         # 添加标题标签和内容标签到文本布局
         self.textLayout.addWidget(self.titleLabel, 0, Qt.AlignTop)
-        self.textLayout.addWidget(self.contentLabel, 0, Qt.AlignTop)
+        self.textLayout.addWidget(self.bodyLabel, 0, Qt.AlignTop)
 
         
         # 设置按钮布局的间距和边距
@@ -306,13 +305,13 @@ class MessageBox(MaskDialogBase):
         """ 设置样式表 """
         # 设置对象名称，用于QSS选择器
         self.titleLabel.setObjectName("titleLabel")
-        self.contentLabel.setObjectName("contentLabel")
+        self.bodyLabel.setObjectName("contentLabel")
         self.buttonGroup.setObjectName('buttonGroup')
         self.cancelButton.setObjectName('cancelButton')
 
         # 应用样式表
         FluentStyleSheet.DIALOG.apply(self)
-        FluentStyleSheet.DIALOG.apply(self.contentLabel)
+        FluentStyleSheet.DIALOG.apply(self.bodyLabel)
 
         # 调整按钮大小以适应文本
         self.yesButton.adjustSize()
@@ -326,11 +325,11 @@ class MessageBox(MaskDialogBase):
         """
         if isCopyable:
             # 设置内容标签可被鼠标选择
-            self.contentLabel.setTextInteractionFlags(
+            self.bodyLabel.setTextInteractionFlags(
                 Qt.TextInteractionFlag.TextSelectableByMouse)
         else:
             # 设置内容标签不可交互
-            self.contentLabel.setTextInteractionFlags(
+            self.bodyLabel.setTextInteractionFlags(
                 Qt.TextInteractionFlag.NoTextInteraction)
 
 

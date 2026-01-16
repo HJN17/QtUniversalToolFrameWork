@@ -9,7 +9,7 @@ from .button import (DropDownPushButton, DropDownToolButton, PrimaryPushButton, 
 from .command_bar import CommandBar, CommandButton, CommandBarView
 from .line_edit import LineEdit, TextEdit, PlainTextEdit, LineEditButton, SearchLineEdit, PasswordLineEdit, TextBrowser,NumberEdit
 from .icon_widget import IconWidget
-from .label import (PixmapLabel, CaptionLabel, BodyLabel, TitleLabel, CommandBarLabel,
+from .label import (PixmapLabel, CaptionLabel, BodyLabel, TitleLabel, CommandBarLabel,MessageBodyLabel,
                       FluentLabelBase, ImageLabel, AvatarWidget, HyperlinkLabel)
 from .menu import (DWMMenu, LineEditMenu, RoundMenu, MenuAnimationManager, MenuAnimationType, IndicatorMenuItemDelegate,
                    MenuItemDelegate, ShortcutMenuItemDelegate, CheckableMenu, MenuIndicatorType, SystemTrayMenu,

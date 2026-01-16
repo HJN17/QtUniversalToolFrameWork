@@ -168,6 +168,11 @@ class FluentLabelBase(QLabel):
         menu.exec(self.mapToGlobal(pos))
 
 
+class MessageBodyLabel(FluentLabelBase):
+    """ 消息体文本标签 """
+    def getFont(self):
+        return getFont(12)
+
 class CaptionLabel(FluentLabelBase):
     """ 文字体标签 """
     def getFont(self):
