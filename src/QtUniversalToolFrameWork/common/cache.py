@@ -14,6 +14,9 @@ class LRUCache:
         self.cache = OrderedDict()
         self.capacity = capacity
 
+    def keys(self):
+        return self.cache.keys()
+
     def get(self, key: str):
         if key not in self.cache:
             return None
@@ -35,3 +38,6 @@ class LRUCache:
 
     def clear(self):
         self.cache.clear()
+
+    def size(self):
+        return len(self.cache.keys())

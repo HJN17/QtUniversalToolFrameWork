@@ -135,8 +135,11 @@ class ImageProgressWidget(QWidget):
         self.numberEdit = NumberEdit(self)
         
         self.numberEdit.valueChanged.connect(self.slider.setValue)
+        #numberEdit失去焦点时触发value_changed
+        self.numberEdit.editingFinished.connect(self.value_changed)
         self.slider.valueChanged.connect(self.numberEdit.setValue)
-        self.slider.valueChanged.connect(self.progress) 
+        self.slider.sliderReleased.connect(self.value_changed)
+        
         self._init_ui()
         self.set_slider_range(0, 0)
         
@@ -155,6 +158,9 @@ class ImageProgressWidget(QWidget):
         hBoxLayout.addWidget(self.slider)
         hBoxLayout.addWidget(self.numberEdit)
 
+    def get_value(self) -> int:
+        return self.slider.value()
+
     def set_slider_width(self, value: int):
         self.slider.setMinimumWidth(value)
 
@@ -164,6 +170,11 @@ class ImageProgressWidget(QWidget):
     def set_slider_range(self, min: int, max: int):
         self.slider.setRange(min, max)
         self.numberEdit.setRange(min, max)
+
+
+    def value_changed(self):
+        self.progress.emit(self.get_value())
+
 
 class ImageCanvas(QFrame):
 

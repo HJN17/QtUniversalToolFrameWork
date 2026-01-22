@@ -226,8 +226,8 @@ class QssTemplate(Template):
 def applyThemeColor(qss: str):
     """ 将主题色变量替换为实际颜色值，应用到QSS样式表中 """
     template = QssTemplate(qss)
-    mappings = {c.value: c.name() for c in ThemeColor._member_map_.values()}
-    return template.safe_substitute(mappings)
+    mappings = {c.value: c.name() for c in ThemeColor._member_map_.values()} # 主题色变量映射表
+    return template.safe_substitute(mappings) # 替换主题色变量为实际颜色值
 
 def getStyleSheetFromFile(file: Union[str, QFile]):
     """ 从文件读取QSS样式表内容（支持路径字符串或QFile对象）"""

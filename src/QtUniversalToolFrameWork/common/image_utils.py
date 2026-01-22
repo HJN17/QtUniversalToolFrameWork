@@ -89,6 +89,8 @@ class ImageManager(AbstractViewer):
     
     image_loaded = pyqtSignal(QPixmap)
 
+    key_progress = pyqtSignal(str)
+
     def __init__(self, parent=None, batch_size=100):
         super().__init__(parent)
         
@@ -99,7 +101,6 @@ class ImageManager(AbstractViewer):
         self.current_item_changed.connect(self._get_current_image)
         self.current_item_changed.connect(self._preload_next_batch)
         
-
 
     def get_image_name_by_index(self,index:int) -> str:
         if index < 0 or index >= self.count:
@@ -137,7 +138,7 @@ class ImageManager(AbstractViewer):
             if not pixmap:
                 return None
       
-            self._pixmap_cache.put(path, pixmap)
+            self._on_image_preloaded(path, pixmap)
 
         self.image_loaded.emit(pixmap)
     
@@ -160,11 +161,10 @@ class ImageManager(AbstractViewer):
             
             self._preload_worker = PreloadWorker(paths_to_preload)
             self._preload_worker.progress.connect(self._on_image_preloaded)
-    
             self._preload_worker.start()
     
-    @pyqtSlot(str, QPixmap)
     def _on_image_preloaded(self, path: str, pixmap: QPixmap):
         """ 预加载线程完成信号槽函数：处理预加载完成后的缓存更新 """
         if pixmap:
             self._pixmap_cache.put(path, pixmap)
+            self.key_progress.emit(path)
