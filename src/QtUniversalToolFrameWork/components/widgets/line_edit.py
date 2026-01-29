@@ -689,14 +689,12 @@ class SearchLineEdit(LineEdit):
         self.setTextMargins(0, 0, self.searchButton.width()*enable+self.clearButton.width(), 0)  # 调整文本边距，为清除按钮和搜索按钮留出空间
 
 
-
-
 class CustomLineEdit(QLineEdit):
     """ 自定义行编辑组件，继承自QLineEdit
     
     该组件提供了自定义的行编辑功能，包括文本边距调整和清除按钮。
     """
-    valueChanged = pyqtSignal(float)  # 值变化信号，当数字值改变时发射
+    valueChanged = pyqtSignal(object)  # 值变化信号，当数字值改变时发射
 
     def __init__(self, parent=None):
         super().__init__(parent) 
@@ -706,10 +704,12 @@ class CustomLineEdit(QLineEdit):
 
 
         self.textChanged.connect(self._onTextChanged)
-
-        self.setAlignment(Qt.AlignCenter)  # 居中对齐
+        self.setProperty("transparent", True)
+        self.setAlignment(Qt.AlignLeft)  # 居中对齐
         FluentStyleSheet.LINE_EDIT.apply(self)  # 应用行编辑样式表
-        setFont(self,fontSize=12)  # 设置字体
+        self.setFocusPolicy(Qt.NoFocus)  # 设置无焦点策略
+        self.setFixedHeight(31)  # 设置固定高度
+        setFont(self)  # 设置字体
 
 
     def setCustomFocusedBorderColor(self, light, dark):
@@ -774,8 +774,16 @@ class CustomLineEdit(QLineEdit):
         path = path.subtracted(rectPath)  # 从圆角矩形路径中减去矩形路径，创建底部圆弧效果
 
         painter.fillPath(path, self.focusedBorderColor())  # 使用聚焦边框颜色填充路径
+    
 
+    def mousePressEvent(self, event):
+        self.setFocusPolicy(Qt.StrongFocus)
+        self.setFocus()
+        super().mousePressEvent(event)
 
+    def focusOutEvent(self, event):
+        self.setFocusPolicy(Qt.NoFocus)
+        super().focusOutEvent(event)
 class NumberEdit(CustomLineEdit):
 
     """ 数字行编辑组件，继承自LineEdit，专门用于数字输入和搜索

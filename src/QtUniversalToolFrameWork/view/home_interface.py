@@ -1,7 +1,7 @@
 # coding:utf-8
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
-
+from ..components.widgets.line_edit import CustomLineEdit,LineEdit
 
 class HomeInterface(QWidget):
     """ 首页界面类：继承自ScrollArea，用于显示应用的主要功能示例卡片 """
@@ -10,6 +10,11 @@ class HomeInterface(QWidget):
         super().__init__(parent=parent)
         self.view = QWidget(self)
         self.vBoxLayout = QVBoxLayout(self.view)
+        self.lineEdit = CustomLineEdit(self.view)
+        self.vBoxLayout.addWidget(self.lineEdit)
+        self.lineEdit1 = LineEdit(self.view)
+        self.vBoxLayout.addWidget(self.lineEdit1)
+
         self.__initWidget()
 
     def __initWidget(self):

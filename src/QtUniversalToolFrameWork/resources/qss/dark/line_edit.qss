@@ -19,12 +19,12 @@ LineEdit:hover, TextEdit:hover, PlainTextEdit:hover, TextBrowser:hover,CustomLin
     background: rgba(255, 255, 255, 0.0837);
 }
 
-LineEdit:focus[transparent=true] {
+LineEdit:focus[transparent=true],CustomLineEdit:focus[transparent=true]{
     background: rgba(30, 30, 30, 0.7);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-LineEdit[transparent=false]:focus {
+LineEdit[transparent=false]:focus,CustomLineEdit[transparent=false]:focus{
     background: rgb(31, 31, 31);
 }
 
