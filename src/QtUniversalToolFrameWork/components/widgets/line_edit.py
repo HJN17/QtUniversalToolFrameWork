@@ -1,10 +1,9 @@
 # 导入必要的模块
 from typing import List, Union
 from PyQt5.QtCore import QSize, Qt, QRectF, pyqtSignal, QPoint, QTimer, QEvent, QAbstractItemModel, pyqtProperty, QModelIndex,QSortFilterProxyModel
-from PyQt5.QtGui import QPainter, QPainterPath, QIcon, QColor
+from PyQt5.QtGui import QPainter, QPainterPath, QIcon, QColor, QPen   
 from PyQt5.QtWidgets import (QApplication, QAction, QHBoxLayout, QLineEdit, QToolButton, QTextEdit,
                              QPlainTextEdit, QCompleter, QStyle, QWidget, QTextBrowser)
-
 
 from ...common.style_sheet import FluentStyleSheet, themeColor
 from ...common.icon import isDarkTheme, FluentIconBase, drawIcon 
@@ -704,14 +703,15 @@ class CustomLineEdit(QLineEdit):
 
 
         self.textChanged.connect(self._onTextChanged)
-        self.setProperty("transparent", True)
+        self.setProperty("transparent", True)  # 设置属性值
         self.setAlignment(Qt.AlignLeft)  # 居中对齐
         FluentStyleSheet.LINE_EDIT.apply(self)  # 应用行编辑样式表
         self.setFocusPolicy(Qt.NoFocus)  # 设置无焦点策略
         self.setFixedHeight(31)  # 设置固定高度
         setFont(self)  # 设置字体
 
-
+        
+    
     def setCustomFocusedBorderColor(self, light, dark):
         """ 设置聚焦状态下的边框颜色
         
@@ -784,6 +784,7 @@ class CustomLineEdit(QLineEdit):
     def focusOutEvent(self, event):
         self.setFocusPolicy(Qt.NoFocus)
         super().focusOutEvent(event)
+
 class NumberEdit(CustomLineEdit):
 
     """ 数字行编辑组件，继承自LineEdit，专门用于数字输入和搜索
