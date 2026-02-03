@@ -116,9 +116,6 @@ ENV/
 env.bak/
 venv.bak/
 
-# Spyder project settings
-.spyderproject
-.spyproject
 
 # Rope project settings
 .ropeproject
@@ -166,3 +163,5 @@ __marimo__/
 
 # 忽略测试文件
 test*.py
+__main__.py
+pyproject.toml

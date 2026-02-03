@@ -695,22 +695,20 @@ class CustomLineEdit(QLineEdit):
     """
     valueChanged = pyqtSignal(object)  # 值变化信号，当数字值改变时发射
 
-    def __init__(self, parent=None):
+    def __init__(self,parent=None,align=Qt.AlignLeft):
         super().__init__(parent) 
 
         self.lightFocusedBorderColor = QColor()  # 浅色主题下的聚焦边框颜色
         self.darkFocusedBorderColor = QColor()  # 深色主题下的聚焦边框颜色
 
-
         self.textChanged.connect(self._onTextChanged)
         self.setProperty("transparent", True)  # 设置属性值
-        self.setAlignment(Qt.AlignLeft)  # 居中对齐
+        self.setAlignment(align)  # 居中对齐
         FluentStyleSheet.LINE_EDIT.apply(self)  # 应用行编辑样式表
         self.setFocusPolicy(Qt.NoFocus)  # 设置无焦点策略
         self.setFixedHeight(31)  # 设置固定高度
         setFont(self)  # 设置字体
 
-        
     
     def setCustomFocusedBorderColor(self, light, dark):
         """ 设置聚焦状态下的边框颜色
@@ -793,14 +791,14 @@ class NumberEdit(CustomLineEdit):
     支持整数和小数输入，并提供范围限制功能。
     """
 
-    def __init__(self, parent=None, min_value=None, max_value=None):
+    def __init__(self, parent=None, min_value=None, max_value=None,align=Qt.AlignHCenter): 
         """ 初始化数字行编辑组件
         
         :param parent: 父部件
         :param min_value: 允许输入的最小值，None表示无下限
         :param max_value: 允许输入的最大值，None表示无上限
         """
-        super().__init__(parent) 
+        super().__init__(parent,align) 
 
         self._minValue = min_value  # 最小值限制
         self._maxValue = max_value  # 最大值限制
