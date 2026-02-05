@@ -6,7 +6,6 @@ class AbstractViewer(QObject):
     """
     抽象的“查看器”模型。负责管理一个列表和当前索引，并提供浏览接口。
     当状态变化时，通过信号通知视图。
-    
     """
 
     current_item_changed = pyqtSignal()

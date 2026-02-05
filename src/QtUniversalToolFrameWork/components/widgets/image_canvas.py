@@ -152,7 +152,7 @@ class ImageProgressWidget(QWidget):
         self.slider.setMinimumWidth(250)
         self.slider.setFixedHeight(13)
 
-        self.numberEdit.setFixedWidth(45)
+        self.numberEdit.setFixedWidth(60)
         self.numberEdit.setFixedHeight(26)
 
         hBoxLayout.addWidget(self.slider)
@@ -233,6 +233,14 @@ class ImageCanvas(QFrame):
             self.update_scaled_image()
 
         self.update()
+
+
+    def center_image(self):
+        """居中显示图像"""
+        self.init_load_image()    
+        self.update_scaled_image()
+        self.update()
+        
 
     def load_image(self, image_path: str):
         pixmap = QPixmap(image_path)

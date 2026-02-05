@@ -10,7 +10,7 @@ class LRUCache:
     当缓存满时，会移除最近最少使用的项。
     """
     
-    def __init__(self, capacity: int = 300):
+    def __init__(self, capacity: int = 100):
         self.cache = OrderedDict()
         self.capacity = capacity
 
