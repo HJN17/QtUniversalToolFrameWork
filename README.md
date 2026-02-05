@@ -10,13 +10,7 @@ qt通用工具框架是一个基于python的qt框架，用于快速开发qt应�
 ## Stable release
 
 To install QtUniversalToolFrameWork, run this command in your terminal:
-
-```sh
-uv add QtUniversalToolFrameWork
-```
-
-Or if you prefer to use `pip`:
-
+x
 ```sh
 pip install QtUniversalToolFrameWork
 ```
@@ -29,17 +23,4 @@ You can either clone the public repository:
 
 ```sh
 git clone git://github.com/HJN17/QtUniversalToolFrameWork
-```
-
-Or download the [tarball](https://github.com/HJN17/QtUniversalToolFrameWork/tarball/master):
-
-```sh
-curl -OJL https://github.com/HJN17/QtUniversalToolFrameWork/tarball/master
-```
-
-Once you have a copy of the source, you can install it with:
-
-```sh
-cd QtUniversalToolFrameWork
-uv pip install .
 ```
